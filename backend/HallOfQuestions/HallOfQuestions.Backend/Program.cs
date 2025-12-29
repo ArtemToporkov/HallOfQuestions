@@ -1,4 +1,6 @@
 using HallOfQuestions.Backend.Entities;
+using HallOfQuestions.Backend.ExceptionHandling;
+using HallOfQuestions.Backend.Exceptions;
 using HallOfQuestions.Backend.Repositories.Abstractions;
 using HallOfQuestions.Backend.Repositories.Implementations;
 using HallOfQuestions.Backend.Requests;
@@ -8,10 +10,12 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
 builder.Services.AddSingleton<IConferenceRepository, InMemoryConferenceRepository>();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+app.UseExceptionHandler();
 
 app.MapGet("/api/conferences", async ([FromServices] IConferenceRepository repository) =>
 {
@@ -28,15 +32,7 @@ app.MapPost("/api/conferences", async (
         request.ConferenceName,
         request.ConferenceStartDate,
         request.ConferenceEndDate);
-    try
-    {
-        await repository.AddAsync(conference);
-        return Results.Ok();
-    }
-    catch (InvalidOperationException)
-    {
-        return Results.BadRequest();
-    }
+    await repository.AddAsync(conference);
 });
 
 app.MapPost("/api/conferences/{id}/start", async (
@@ -45,16 +41,8 @@ app.MapPost("/api/conferences/{id}/start", async (
 {
     var conference = await repository.GetByIdAsync(id);
     if (conference is null)
-        return Results.NotFound();
-    try
-    {
-        conference.Start(DateTime.UtcNow);
-        return Results.Ok();
-    }
-    catch (InvalidOperationException)
-    {
-        return Results.Conflict();
-    }
+        throw new NotFoundException(nameof(Conference), id);
+    conference.Start(DateTime.UtcNow);
 });
 
 app.MapPost("/api/conferences/{id}/end", async (
@@ -63,16 +51,8 @@ app.MapPost("/api/conferences/{id}/end", async (
 {
     var conference = await repository.GetByIdAsync(id);
     if (conference is null)
-        return Results.NotFound();
-    try
-    {
-        conference.End(DateTime.UtcNow);
-        return Results.Ok();
-    }
-    catch (InvalidOperationException)
-    {
-        return Results.Conflict();
-    }
+        throw new NotFoundException(nameof(Conference), id);
+    conference.End(DateTime.UtcNow);
 });
 
 app.MapGet("/api/conferences/{id}/questions", async (
@@ -91,24 +71,14 @@ app.MapPost("/api/conferences/{id}/questions", async (
 {
     var conference = await conferenceRepository.GetByIdAsync(id);
     if (conference is null)
-        return Results.NotFound();
-
+        throw new NotFoundException(nameof(Conference), id);
     var question = new Question(
         Guid.NewGuid().ToString(),
         id,
         request.QuestionTheme,
         request.QuestionText,
         DateTime.UtcNow);
-
-    try
-    {
-        await questionRepository.AddAsync(question);
-        return Results.Ok();
-    }
-    catch (InvalidOperationException)
-    {
-        return Results.Conflict();
-    }
+    await questionRepository.AddAsync(question);
 });
 
 app.MapPost("/api/conferences/{conferenceId}/questions/{questionId}/like", async (
@@ -118,18 +88,10 @@ app.MapPost("/api/conferences/{conferenceId}/questions/{questionId}/like", async
 {
     var question = await repository.GetByIdAsync(questionId);
     if (question is null)
-        return Results.NotFound();
-    ArgumentOutOfRangeException.ThrowIfNotEqual(question.ConferenceId, conferenceId);
-
-    try
-    {
-        question.Like();
-        return Results.Ok();
-    }
-    catch (InvalidOperationException)
-    {
-        return Results.Conflict();
-    }
+        throw new NotFoundException(nameof(Question), questionId);
+    if (question.ConferenceId != conferenceId)
+        throw new BadRequestException("Question does not belong to this conference");
+    question.Like();
 });
 
 app.Run();

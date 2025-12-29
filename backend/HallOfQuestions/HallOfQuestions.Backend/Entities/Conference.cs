@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using HallOfQuestions.Backend.Enums;
+﻿using HallOfQuestions.Backend.Enums;
+using HallOfQuestions.Backend.Exceptions;
 
 namespace HallOfQuestions.Backend.Entities;
 
@@ -15,7 +15,8 @@ public class Conference
 
     public Conference(string id, string name, DateTime scheduledStartDate, DateTime scheduledEndDate)
     {
-        ArgumentOutOfRangeException.ThrowIfGreaterThan(scheduledStartDate, scheduledEndDate);
+        if (scheduledStartDate > scheduledEndDate)
+            throw new DomainException("Scheduled start date can't be later than scheduled end date");
         
         Id = id;
         Name = name;
@@ -28,8 +29,8 @@ public class Conference
     public void Start(DateTime startDate) =>
         Status = Status switch
         {
-            ConferenceStatus.Started => throw new InvalidOperationException("Conference has already started"),
-            ConferenceStatus.Ended => throw new InvalidOperationException("Conference has already ended"),
+            ConferenceStatus.Started => throw new DomainException("Conference has already started"),
+            ConferenceStatus.Ended => throw new DomainException("Conference has already ended"),
             ConferenceStatus.NotStarted => ConferenceStatus.Started,
             _ => throw new ArgumentException("Unexpected conference status")
         };
@@ -39,11 +40,12 @@ public class Conference
         var newStatus = Status switch
         {
             ConferenceStatus.Started => ConferenceStatus.Ended,
-            ConferenceStatus.Ended => throw new InvalidOperationException("Conference has already ended"),
-            ConferenceStatus.NotStarted => throw new InvalidOperationException("Conference has not started"),
+            ConferenceStatus.Ended => throw new DomainException("Conference has already ended"),
+            ConferenceStatus.NotStarted => throw new DomainException("Conference has not started"),
             _ => throw new ArgumentException("Unexpected conference status")
         };
-        ArgumentOutOfRangeException.ThrowIfLessThan(endDate, ActualStartDate!.Value);
+        if (endDate > ActualStartDate!.Value)
+            throw new DomainException("Conference can't end earlier than it started");
 
         Status = newStatus;
         ActualEndDate = endDate;

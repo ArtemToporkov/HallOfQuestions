@@ -1,16 +1,18 @@
-﻿using HallOfQuestions.Backend.Entities;
+﻿using System.Collections.Concurrent;
+using HallOfQuestions.Backend.Entities;
+using HallOfQuestions.Backend.Exceptions;
 using HallOfQuestions.Backend.Repositories.Abstractions;
 
 namespace HallOfQuestions.Backend.Repositories.Implementations;
 
 public class InMemoryQuestionRepository : IQuestionRepository
 {
-    private readonly Dictionary<string, Question> _questions = new();
+    private readonly ConcurrentDictionary<string, Question> _questions = new();
 
     public Task AddAsync(Question question, CancellationToken cancellationToken = default)
     {
         if (!_questions.TryAdd(question.Id, question))
-            throw new InvalidOperationException("Question already exists");
+            throw new ConflictException("Question already exists");
         return Task.CompletedTask;
     }
 

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using HallOfQuestions.Backend.Exceptions;
 
 namespace HallOfQuestions.Backend.Entities;
 
@@ -26,6 +26,6 @@ public class Question
     public void Unlike()
     {
         if (LikesCount == 0)
-            throw new InvalidOperationException("Likes cannot be negative");
+            throw new DomainException("Likes count cannot be negative");
     }
 }
