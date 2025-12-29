@@ -7,11 +7,11 @@ public class AddConferenceRequest
     [Required]
     [MinLength(10)]
     [MaxLength(50)]
-    public required string Name { get; init; }
+    public required string ConferenceName { get; init; }
     
     [Required]
-    public required DateTime StartDate { get; init; }
+    public required DateTime ConferenceStartDate { get; init; }
     
     [Required]
-    public required DateTime EndDate { get; init; }
+    public required DateTime ConferenceEndDate { get; init; }
 }

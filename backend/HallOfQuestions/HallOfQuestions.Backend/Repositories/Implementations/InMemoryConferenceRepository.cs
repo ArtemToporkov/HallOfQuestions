@@ -14,6 +14,12 @@ public class InMemoryConferenceRepository : IConferenceRepository
         return Task.CompletedTask;
     }
 
+    public Task<Conference?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
+    {
+        _conferences.TryGetValue(id, out var conference);
+        return Task.FromResult(conference);
+    }
+
     public Task<IEnumerable<Conference>> GetAllAsync(CancellationToken cancellationToken = default) =>
         Task.FromResult(_conferences.Values.AsEnumerable());
 

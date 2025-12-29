@@ -7,10 +7,10 @@ public class AddQuestionRequest
     [Required]
     [MinLength(3)]
     [MaxLength(50)]
-    public required string Theme { get; init; }
+    public required string QuestionTheme { get; init; }
     
     [Required]
     [MinLength(10)]
     [MaxLength(200)]
-    public required string Text { get; init; }
+    public required string QuestionText { get; init; }
 }

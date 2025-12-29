@@ -13,7 +13,7 @@ public class Conference
     public DateTime? ActualEndDate { get; private set; }
     public ConferenceStatus Status { get; private set; }
 
-    public Conference(string id, string name, DateTime scheduledStartDate, DateTime scheduledEndDate, ConferenceStatus status)
+    public Conference(string id, string name, DateTime scheduledStartDate, DateTime scheduledEndDate)
     {
         ArgumentOutOfRangeException.ThrowIfGreaterThan(scheduledStartDate, scheduledEndDate);
         
@@ -22,7 +22,7 @@ public class Conference
         ScheduledStartDate = scheduledStartDate;
         ScheduledEndDate = scheduledEndDate;
         ActualEndDate = null;
-        Status = status;
+        Status = ConferenceStatus.NotStarted;
     }
     
     public void Start(DateTime startDate) =>
