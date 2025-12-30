@@ -1,4 +1,4 @@
-﻿export enum ConferenceStatus {
+﻿export enum ReportStatus {
     NotStarted,
     Started,
     Ended

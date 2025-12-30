@@ -1,7 +1,7 @@
-﻿import type { ReactElement } from 'react';
+import type { ReactElement } from 'react';
 import { Layout } from '../../components/layout/layout.tsx';
 
-export function Conferences(): ReactElement {
+export function ReportPage(): ReactElement {
     return (
         <Layout>
             <div></div>

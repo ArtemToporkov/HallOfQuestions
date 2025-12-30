@@ -1,4 +1,4 @@
-﻿export type SpeakerInfo = {
+﻿export type SpeakerData = {
     name: string;
     surname: string;
 }

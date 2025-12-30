@@ -8,6 +8,8 @@
     --font-size-h1: 32px;
     --font-size-h2: 20px;
     --font-size-text: 16px;
+    --font-weight-light: 200;
+    --border-radius: 20px;
 
     font-family: Montserrat, serif;
     background-color: var(--background-color);

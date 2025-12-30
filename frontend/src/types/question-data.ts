@@ -1,4 +1,4 @@
-﻿export type QuestionInfo = {
+﻿export type QuestionData = {
     id: string;
     conferenceId: string;
     theme: string;
