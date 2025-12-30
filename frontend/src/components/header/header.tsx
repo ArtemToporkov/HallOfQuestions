@@ -1,11 +1,13 @@
 ﻿import type { ReactElement } from 'react';
 
+import './header.css';
+
 export function Header(): ReactElement {
     return (
-        <div className="header">
+        <header className="header">
             <span className="header__text">
                 Hall of Questions
             </span>
-        </div>
+        </header>
     )
 }
