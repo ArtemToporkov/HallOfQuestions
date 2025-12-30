@@ -1,0 +1,84 @@
+﻿.reports-page__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.reports-page__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 70px;
+}
+
+.reports-page__header-text {
+    font-weight: bold;
+    font-size: var(--font-size-h2);
+}
+
+.reports-page__header-create-button {
+    font-weight: bold;
+    color: var(--panel-color);
+    background-color: var(--text-color);
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-h2);
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+}
+
+.reports-page__header-create-button:hover {
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+}
+
+.reports-page__status-choice {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.reports-page__status-choice-option {
+    cursor: pointer;
+}
+
+.reports-page__status-choice-label {
+    opacity: var(--translucent-percent);
+    font-size: var(--font-size-text-small);
+    font-weight: var(--font-weight-light);
+    transition: opacity 0.2s ease;
+}
+
+.reports-page__status-choice-radio {
+    appearance: none;
+}
+
+.reports-page__status-choice-radio:checked + .reports-page__status-choice-label {
+    opacity: 1;
+}
+
+.reports-page__reports-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.reports-page__reports-list-empty {
+    font-weight: bold;
+    padding: 50px;
+    box-sizing: border-box;
+    width: 80%;
+    background-color: var(--panel-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border-radius);
+}
