@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
-builder.Services.AddSingleton<IConferenceRepository, InMemoryConferenceRepository>();
+builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 var app = builder.Build();
@@ -17,61 +17,62 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 app.UseExceptionHandler();
 
-app.MapGet("/api/conferences", async ([FromServices] IConferenceRepository repository) =>
+app.MapGet("/api/reports", async (
+    [FromServices] IReportRepository repository) =>
 {
-    var conferences = await repository.GetAllAsync();
-    return conferences;
+    var reports = await repository.GetAllAsync();
+    return reports;
 });
 
-app.MapPost("/api/conferences", async (
-    [FromBody] AddConferenceRequest request,
-    [FromServices] IConferenceRepository repository) =>
+app.MapPost("/api/reports", async (
+    [FromBody] AddReportRequest request,
+    [FromServices] IReportRepository repository) =>
 {
-    var conference = new Conference(
+    var report = new Report(
         Guid.NewGuid().ToString(),
-        request.ConferenceName,
-        request.ConferenceStartDate,
-        request.ConferenceEndDate);
-    await repository.AddAsync(conference);
+        request.ReportTitle,
+        request.ReportStartDate,
+        request.ReportEndDate);
+    await repository.AddAsync(report);
 });
 
-app.MapPost("/api/conferences/{id}/start", async (
+app.MapPost("/api/reports/{id}/start", async (
     [FromRoute] string id,
-    [FromServices] IConferenceRepository repository) =>
+    [FromServices] IReportRepository repository) =>
 {
-    var conference = await repository.GetByIdAsync(id);
-    if (conference is null)
-        throw new NotFoundException(nameof(Conference), id);
-    conference.Start(DateTime.UtcNow);
+    var report = await repository.GetByIdAsync(id);
+    if (report is null)
+        throw new NotFoundException(nameof(Report), id);
+    report.Start(DateTime.UtcNow);
 });
 
-app.MapPost("/api/conferences/{id}/end", async (
+app.MapPost("/api/reports/{id}/end", async (
     [FromRoute] string id,
-    [FromServices] IConferenceRepository repository) =>
+    [FromServices] IReportRepository repository) =>
 {
-    var conference = await repository.GetByIdAsync(id);
-    if (conference is null)
-        throw new NotFoundException(nameof(Conference), id);
-    conference.End(DateTime.UtcNow);
+    var report = await repository.GetByIdAsync(id);
+    if (report is null)
+        throw new NotFoundException(nameof(Report), id);
+    report.End(DateTime.UtcNow);
 });
 
-app.MapGet("/api/conferences/{id}/questions", async (
+app.MapGet("/api/reports/{id}/questions", async (
     [FromRoute] string id,
     [FromServices] IQuestionRepository repository) =>
 {
-    var questions = await repository.GetAllForConferenceAsync(id);
+    var questions = await repository.GetAllForReportAsync(id);
     return Results.Ok(questions);
 });
 
-app.MapPost("/api/conferences/{id}/questions", async (
+app.MapPost("/api/reports/{id}/questions", async (
     [FromRoute] string id,
     [FromBody] AddQuestionRequest request, 
     [FromServices] IQuestionRepository questionRepository, 
-    [FromServices] IConferenceRepository conferenceRepository) =>
+    [FromServices] IReportRepository reportRepository) =>
 {
-    var conference = await conferenceRepository.GetByIdAsync(id);
-    if (conference is null)
-        throw new NotFoundException(nameof(Conference), id);
+    var report = await reportRepository.GetByIdAsync(id);
+    if (report is null)
+        throw new NotFoundException(nameof(Report), id);
     var question = new Question(
         Guid.NewGuid().ToString(),
         id,
@@ -81,16 +82,16 @@ app.MapPost("/api/conferences/{id}/questions", async (
     await questionRepository.AddAsync(question);
 });
 
-app.MapPost("/api/conferences/{conferenceId}/questions/{questionId}/like", async (
-    [FromRoute] string conferenceId,
+app.MapPost("/api/reports/{reportId}/questions/{questionId}/like", async (
+    [FromRoute] string reportId,
     [FromRoute] string questionId,
     [FromServices] IQuestionRepository repository) =>
 {
     var question = await repository.GetByIdAsync(questionId);
     if (question is null)
         throw new NotFoundException(nameof(Question), questionId);
-    if (question.ConferenceId != conferenceId)
-        throw new BadRequestException("Question does not belong to this conference");
+    if (question.ReportId != reportId)
+        throw new BadRequestException("Question does not belong to this report");
     question.Like();
 });
 

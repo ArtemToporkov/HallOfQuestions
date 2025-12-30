@@ -16,12 +16,12 @@ public class InMemoryQuestionRepository : IQuestionRepository
         return Task.CompletedTask;
     }
 
-    public Task<IEnumerable<Question>> GetAllForConferenceAsync(string conferenceId,
+    public Task<IEnumerable<Question>> GetAllForReportAsync(string reportId,
         CancellationToken cancellationToken = default) =>
         Task.FromResult(
             _questions
                 .Values
-                .Where(q => q.ConferenceId == conferenceId));
+                .Where(q => q.ReportId == reportId));
 
     public Task<Question?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {

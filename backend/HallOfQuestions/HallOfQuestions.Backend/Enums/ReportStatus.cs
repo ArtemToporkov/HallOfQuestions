@@ -1,6 +1,6 @@
 ﻿namespace HallOfQuestions.Backend.Enums;
 
-public enum ConferenceStatus
+public enum ReportStatus
 {
     NotStarted,
     Started,

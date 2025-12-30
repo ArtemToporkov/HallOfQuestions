@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("HallOfQuestions.Backend")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c48bc85b86890e1ea7881c71200662e2453ef425")]
 [assembly: System.Reflection.AssemblyProductAttribute("HallOfQuestions.Backend")]
 [assembly: System.Reflection.AssemblyTitleAttribute("HallOfQuestions.Backend")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

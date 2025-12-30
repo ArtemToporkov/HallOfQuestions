@@ -5,16 +5,16 @@ namespace HallOfQuestions.Backend.Entities;
 public class Question
 {
     public string Id { get; }
-    public string ConferenceId { get; }
+    public string ReportId { get; }
     public string Theme { get; }
     public string Text { get; }
     public DateTime CreatedAt { get; }
     public int LikesCount { get; private set; }
 
-    public Question(string id, string conferenceId, string theme, string text, DateTime createdAt)
+    public Question(string id, string reportId, string theme, string text, DateTime createdAt)
     {
         Id = id;
-        ConferenceId = conferenceId;
+        ReportId = reportId;
         Theme = theme;
         Text = text;
         CreatedAt = createdAt;
