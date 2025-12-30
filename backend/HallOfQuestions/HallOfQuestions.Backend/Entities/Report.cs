@@ -7,19 +7,21 @@ public class Report
 {
     public string Id { get; }
     public string Title { get; }
+    public Person Speaker { get; }
     public DateTime ScheduledStartDate { get; }
     public DateTime ScheduledEndDate { get; }
     public DateTime? ActualStartDate { get; private set; }
     public DateTime? ActualEndDate { get; private set; }
     public ReportStatus Status { get; private set; }
 
-    public Report(string id, string title, DateTime scheduledStartDate, DateTime scheduledEndDate)
+    public Report(string id, string title, Person speaker, DateTime scheduledStartDate, DateTime scheduledEndDate)
     {
         if (scheduledStartDate > scheduledEndDate)
             throw new DomainException("Scheduled start date can't be later than scheduled end date");
         
         Id = id;
         Title = title;
+        Speaker = speaker;
         ScheduledStartDate = scheduledStartDate;
         ScheduledEndDate = scheduledEndDate;
         ActualEndDate = null;

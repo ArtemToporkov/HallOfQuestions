@@ -16,4 +16,7 @@ public class AddReportRequest
     [Required]
     [DataType(DataType.DateTime)]
     public required DateTime ReportEndDate { get; init; }
+    
+    [Required]
+    public required PersonRequest Speaker { get; init; }
 }

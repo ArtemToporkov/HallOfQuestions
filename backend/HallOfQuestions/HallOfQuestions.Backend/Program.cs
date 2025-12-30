@@ -28,9 +28,11 @@ app.MapPost("/api/reports", async (
     [FromBody] AddReportRequest request,
     [FromServices] IReportRepository repository) =>
 {
+    var person = new Person(request.Speaker.Name, request.Speaker.Surname);
     var report = new Report(
         Guid.NewGuid().ToString(),
         request.ReportTitle,
+        person,
         request.ReportStartDate,
         request.ReportEndDate);
     await repository.AddAsync(report);
