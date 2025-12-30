@@ -1,0 +1,53 @@
+﻿.question-card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--panel-color);
+    padding: 30px 50px;
+    box-sizing: border-box;
+    border-radius: var(--border-radius);
+    font-size: var(--font-size-text);
+    width: 100%;
+}
+
+.question-card__question {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.question-card__question-theme {
+    font-weight: bold;
+}
+
+.question-card__question-text {
+    font-weight: var(--font-weight-light);
+    text-wrap: wrap;
+}
+
+.question-card__likes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.question-card__like-button {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--text-color);
+    background: transparent;
+    cursor: pointer;
+    border-radius: 20px;
+}
+
+.question-card__like-button-liked {
+    border: none;
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+}
+
+.question-card__likes-count {
+    font-weight: var(--font-weight-light);
+}

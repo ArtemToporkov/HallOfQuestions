@@ -11,8 +11,9 @@ export function App(): ReactElement {
   return (
       <BrowserRouter>
         <Routes>
-            <Route path={AppRoute.Conferences} element={<ReportsPage reports={REPORTS} />} />
-            <Route path={AppRoute.Conference} element={<ReportPage /> } />
+            <Route path={AppRoute.Reports} element={<ReportsPage reports={REPORTS} />} />
+            <Route path={AppRoute.Reports} element={<ReportsPage reports={REPORTS} />} />
+            <Route path={AppRoute.Report} element={<ReportPage /> } />
         </Routes>
       </BrowserRouter>
   )
