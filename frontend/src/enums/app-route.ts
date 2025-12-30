@@ -1,4 +1,6 @@
 ﻿export enum AppRoute {
-    Conferences = '/conferences',
-    Conference = '/conferences/:id'
+    Main = '/',
+    Reports = '/reports',
+    Report = '/reports/:id',
+    Unknown = '*'
 }

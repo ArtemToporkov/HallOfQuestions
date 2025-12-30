@@ -1,0 +1,36 @@
+﻿.main-page__container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 80px 20px;
+    font-size: var(--font-size-text);
+}
+
+.main-page__title {
+    font-weight: bold;
+    font-size: var(--font-size-h2);
+}
+
+.main-page__description {
+    background-color: var(--panel-color);
+    width: 60%;
+    padding: 30px;
+    border-radius: var(--border-radius);
+    font-weight: var(--font-weight-light);
+}
+
+.main-page__reports-link {
+    text-decoration: none;
+    background-color: var(--text-color);
+    color: var(--background-color);
+    padding: 10px 20px;
+    font-weight: bold;
+    font-size: var(--font-size-h2);
+    border-radius: var(--border-radius);
+}
+
+.main-page__reports-link:hover {
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+}
