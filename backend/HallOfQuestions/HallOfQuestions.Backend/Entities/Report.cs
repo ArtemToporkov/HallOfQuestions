@@ -28,7 +28,9 @@ public class Report
         Status = ReportStatus.NotStarted;
     }
     
-    public void Start(DateTime startDate) =>
+    public void Start(DateTime startDate)
+    {
+        ActualStartDate = startDate;
         Status = Status switch
         {
             ReportStatus.Started => throw new DomainException("Report has already started"),
@@ -36,6 +38,7 @@ public class Report
             ReportStatus.NotStarted => ReportStatus.Started,
             _ => throw new ArgumentException("Unexpected report status")
         };
+    }
 
     public void End(DateTime endDate)
     {
@@ -46,7 +49,7 @@ public class Report
             ReportStatus.NotStarted => throw new DomainException("Report has not started"),
             _ => throw new ArgumentException("Unexpected report status")
         };
-        if (endDate > ActualStartDate!.Value)
+        if (endDate < ActualStartDate!.Value)
             throw new DomainException("Report can't end earlier than it started");
 
         Status = newStatus;
