@@ -1,9 +1,10 @@
-﻿import axios from 'axios';
+﻿import axios, { type AxiosError } from 'axios';
 import type { QuestionData } from '../types/question-data.ts';
 import { generatePath } from 'react-router-dom';
 import { ApiRoute } from '../enums/api-route.ts';
 import type { ReportData } from '../types/report-data.ts';
 import type { SpeakerData } from '../types/speaker-data.ts';
+import { toast } from 'react-toastify';
 
 const api = axios.create({
     baseURL: '/api',
@@ -11,6 +12,38 @@ const api = axios.create({
         'Content-Type': 'application/json'
     }
 });
+
+type ProblemDetails = {
+    type?: string;
+    title?: string;
+    status?: number;
+    detail?: string;
+    instance?: string;
+    errors?: Record<string, string[]>;
+};
+
+function showProblemToast(problem: ProblemDetails) {
+    if (problem.errors) {
+        Object.values(problem.errors)
+            .flat()
+            .forEach(message => toast.error(message));
+        return;
+    }
+    toast.error(problem.title ?? problem.detail ?? 'Произошла ошибка');
+}
+
+api.interceptors.response.use(
+    response => response,
+    (error: AxiosError<ProblemDetails>) => {
+        const problem = error.response?.data;
+        if (!problem) {
+            toast.error('Сетевая ошибка или сервер недоступен');
+            return Promise.reject(error);
+        }
+        showProblemToast(problem);
+        return Promise.reject(error);
+    }
+);
 
 export const getReports = async (): Promise<ReportData[]> => {
     const reports = await api.get<ReportData[]>(ApiRoute.Reports);

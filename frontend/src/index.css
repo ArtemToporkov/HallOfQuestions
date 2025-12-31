@@ -60,3 +60,28 @@
         --gradient-second-color: rgb(255, 0, 60);
     }
 }
+
+.Toastify__toast {
+    font-family: Montserrat, serif;
+    font-size: var(--font-size-text);
+    box-shadow: none;
+}
+
+.Toastify__toast-body,
+.Toastify__toast--error {
+    background-color: var(--panel-color);
+    color: var(--text-color);
+}
+
+.Toastify__progress-bar {
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+}
+
+.Toastify__toast--error .Toastify__toast-icon svg {
+    fill: var(--gradient-first-color);
+}
+
+.Toastify__close-button {
+    color: var(--gradient-second-color);
+    opacity: 1;
+}
