@@ -53,7 +53,12 @@
 .report-details__speaker,
 .report-details__key,
 .report-details__value {
-    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    background: linear-gradient(
+            to right,
+            var(--gradient-first-color),
+            var(--gradient-second-color),
+            var(--gradient-third-color)
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }

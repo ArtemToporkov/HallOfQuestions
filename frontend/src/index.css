@@ -1,8 +1,27 @@
+@property --gradient-first-color {
+    syntax: '<color>';
+    initial-value: rgb(255, 253, 200);
+    inherits: true;
+}
+
+@property --gradient-second-color {
+    syntax: '<color>';
+    initial-value: rgb(255, 162, 146);
+    inherits: true;
+}
+
+@property --gradient-third-color {
+    syntax: '<color>';
+    initial-value: rgb(255, 0, 60);
+    inherits: true;
+}
+
 :root {
     --background-color: rgb(27, 27, 31);
     --panel-color: rgb(20, 20, 22);
     --gradient-first-color: rgb(255, 253, 200);
-    --gradient-second-color: rgb(255, 0, 60);
+    --gradient-second-color: rgb(255, 162, 146);
+    --gradient-third-color: rgb(255, 0, 60);
     --text-color: rgb(255, 239, 229);
     --translucent-percent: 50%;
     --font-size-h1: 32px;
@@ -15,6 +34,8 @@
     font-family: Montserrat, serif;
     background-color: var(--background-color);
     color: var(--text-color);
+
+    animation: gradientPulse 3s infinite linear;
 }
 
 #root {
@@ -22,4 +43,42 @@
     flex-direction: column;
     min-height: 100vh;
     margin: 20px;
+}
+
+@keyframes gradientPulse {
+    0% {
+        --gradient-first-color:  rgb(255,253,200);
+        --gradient-second-color: rgb(255,162,146);
+        --gradient-third-color:  rgb(255,  0, 60);
+    }
+
+    20% {
+        --gradient-first-color:  rgb(255,200,170);
+        --gradient-second-color: rgb(255,253,200);
+        --gradient-third-color:  rgb(255,162,146);
+    }
+
+    40% {
+        --gradient-first-color:  rgb(255,162,146);
+        --gradient-second-color: rgb(255,200,170);
+        --gradient-third-color:  rgb(255,253,200);
+    }
+
+    60% {
+        --gradient-first-color:  rgb(255,  0, 60);
+        --gradient-second-color: rgb(255,162,146);
+        --gradient-third-color:  rgb(255,200,170);
+    }
+
+    80% {
+        --gradient-first-color:  rgb(255,162,146);
+        --gradient-second-color: rgb(255,  0, 60);
+        --gradient-third-color:  rgb(255,200,170);
+    }
+
+    100% {
+        --gradient-first-color:  rgb(255,200,170);
+        --gradient-second-color: rgb(255,162,146);
+        --gradient-third-color:  rgb(255,  0, 60);
+    }
 }

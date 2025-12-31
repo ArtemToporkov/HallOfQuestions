@@ -76,7 +76,12 @@
 }
 
 .report-info__questions-button:hover {
-    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    background: linear-gradient(
+            to right,
+            var(--gradient-first-color),
+            var(--gradient-second-color),
+            var(--gradient-third-color)
+    );
 }
 
 .report-info__timing-value,
