@@ -3,12 +3,15 @@ import type { ReportData } from '../../types/report-data.ts';
 import { convertReportStatusToString } from '../../utils/utils.ts';
 
 import './report-details.css';
+import { ReportStatus } from '../../enums/report-status.ts';
 
 type ReportDetailsProps = {
     report: ReportData;
+    handleStartClick: () => void;
+    handleEndClick: () => void;
 }
 
-export function ReportDetails({ report }: ReportDetailsProps): ReactElement {
+export function ReportDetails({ report, handleStartClick, handleEndClick }: ReportDetailsProps): ReactElement {
     const getTime = (isoDate: string) => {
         const date = new Date(isoDate);
         const hh = String(date.getHours()).padStart(2, '0');
@@ -46,6 +49,19 @@ export function ReportDetails({ report }: ReportDetailsProps): ReactElement {
                     <span className="report-details__key">Статус:</span>
                     <span className="report-details__value">{statusString}</span>
                 </div>
+            </div>
+
+            <div className="report-details__info-row">
+                {report.status === ReportStatus.NotStarted && (
+                    <button className="report-page__header-action-button" onClick={handleStartClick}>
+                        Начать доклад
+                    </button>
+                )}
+                {report.status === ReportStatus.Started && (
+                    <button className="report-page__header-action-button" onClick={handleEndClick}>
+                        Завершить доклад
+                    </button>
+                )}
             </div>
         </div>
     );

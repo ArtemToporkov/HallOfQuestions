@@ -1,6 +1,6 @@
 ﻿export type QuestionData = {
     id: string;
-    conferenceId: string;
+    reportId: string;
     theme: string;
     text: string;
     likesCount: number;

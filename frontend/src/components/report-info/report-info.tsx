@@ -1,10 +1,12 @@
 ﻿import classNames from 'classnames';
 import type { ReactElement } from 'react';
+import { Link, generatePath } from 'react-router-dom';
 
 import { convertReportStatusToString, formatTimeWithOffset } from '../../utils/utils.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
 import type { ReportData } from '../../types/report-data.ts';
 import type { IsoString } from '../../types/iso-string.ts';
+import { AppRoute } from '../../enums/app-route.ts';
 
 import './report-info.css';
 
@@ -47,6 +49,8 @@ function TimingInfo({ scheduledStartDate, scheduledEndDate, reportStatus, actual
 export function ReportInfo({ report, questionsCount = 0 }: ConferenceInfoProps): ReactElement {
     const isStarted = report.status === ReportStatus.Started;
     const isEnded = report.status === ReportStatus.Ended;
+    const reportLink = generatePath(AppRoute.Report, { id: report.id });
+
     return (
         <div className={classNames(
             'report-info',
@@ -59,10 +63,7 @@ export function ReportInfo({ report, questionsCount = 0 }: ConferenceInfoProps):
                 </span>
             </div>
 
-            <div className={classNames(
-                'report-info__timing',
-                { 'report-info__timing-not-started': !isStarted }
-            )}>
+            <div className="report-info__timing">
                 <TimingInfo
                     scheduledStartDate={report.scheduledStartDate}
                     scheduledEndDate={report.scheduledEndDate}
@@ -76,10 +77,18 @@ export function ReportInfo({ report, questionsCount = 0 }: ConferenceInfoProps):
                 'report-info__questions',
                 { "report-info__questions-not-started": !isStarted }
             )}>
-                <a className="report-info__questions-button">
+                <Link to={reportLink} className="report-info__questions-button">
                     <span className="report-info__questions-button-title">Вопросы</span>
                     <span className="report-info__questions-button-count">{questionsCount}</span>
-                </a>
+                </Link>
+            </div>
+            <div className={classNames(
+                'report-info__goto',
+                { "report-info__goto-started": isStarted }
+            )}>
+                <Link to={reportLink} className="report-info__goto-button">
+                    <span className="report-info__goto-button-title">Перейти</span>
+                </Link>
             </div>
         </div>
     );

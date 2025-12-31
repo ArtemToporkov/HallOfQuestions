@@ -17,10 +17,10 @@ export const getReports = async (): Promise<ReportData[]> => {
     return reports.data;
 }
 
-type AddReportRequest = {
+export type AddReportRequest = {
     reportTitle: string,
-    reportStartDate: Date,
-    reportEndDate: Date,
+    reportStartDate: string,
+    reportEndDate: string,
     speaker: SpeakerData
 }
 
@@ -44,9 +44,9 @@ export const getQuestions = async (reportId: string): Promise<QuestionData[]> =>
     return questions.data;
 }
 
-type AddQuestionRequest = {
-    theme: string;
-    text: string;
+export type AddQuestionRequest = {
+    questionTheme: string;
+    questionText: string;
 }
 
 export const addQuestion = async (reportId: string, request: AddQuestionRequest): Promise<void> => {
@@ -56,10 +56,5 @@ export const addQuestion = async (reportId: string, request: AddQuestionRequest)
 
 export const likeQuestion = async (reportId: string, questionId: string): Promise<void> => {
     const path = generatePath(ApiRoute.LikeQuestion, { reportId, questionId });
-    await api.post(path);
-}
-
-export const unlikeQuestion = async (reportId: string, questionId: string): Promise<void> => {
-    const path = generatePath(ApiRoute.UnlikeQuestion, { reportId, questionId });
     await api.post(path);
 }

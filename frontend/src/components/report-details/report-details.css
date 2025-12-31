@@ -57,3 +57,15 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
+
+.report-page__header-action-button {
+    font-weight: bold;
+    color: var(--panel-color);
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    outline: none;
+    border: none;
+    cursor: pointer;
+    font-size: var(--font-size-text-small);
+    padding: 5px 10px;
+    border-radius: var(--border-radius);
+}

@@ -50,6 +50,7 @@
     text-align: start;
 }
 
+.report-info__goto,
 .report-info__questions {
     display: flex;
     flex-direction: row;
@@ -57,10 +58,12 @@
     align-items: center;
 }
 
+.report-info__goto-started,
 .report-info__questions-not-started {
     display: none;
 }
 
+.report-info__goto-button,
 .report-info__questions-button {
     display: flex;
     flex-direction: row;
@@ -73,14 +76,17 @@
     border-radius: var(--border-radius);
     cursor: pointer;
     flex: 0 0 auto;
+    text-decoration: none;
 }
 
+.report-info__goto-button:hover,
 .report-info__questions-button:hover {
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 }
 
 .report-info__timing-value,
 .report-info__title,
+.report-info__goto-button-title,
 .report-info__questions-button-title {
     font-weight: bold;
 }

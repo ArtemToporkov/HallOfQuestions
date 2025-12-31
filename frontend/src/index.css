@@ -1,6 +1,6 @@
 @property --gradient-first-color {
     syntax: '<color>';
-    initial-value: rgb(255, 253, 200);
+    initial-value: rgb(255, 226, 208);
     inherits: true;
 }
 
@@ -13,9 +13,9 @@
 :root {
     --background-color: rgb(27, 27, 31);
     --panel-color: rgb(20, 20, 22);
-    --gradient-first-color: rgb(255, 253, 200);
+    --gradient-first-color: rgb(255, 226, 208);
     --gradient-second-color: rgb(255, 0, 60);
-    --text-color: rgb(255, 239, 229);
+    --text-color: rgb(255, 226, 208);
     --translucent-percent: 50%;
     --font-size-h1: 32px;
     --font-size-h2: 20px;
@@ -40,23 +40,23 @@
 
 @keyframes gradientPulse {
     0% {
-        --gradient-first-color: rgb(255, 253, 200);
+        --gradient-first-color: rgb(255, 226, 208);
         --gradient-second-color: rgb(255, 0, 60);
     }
     25% {
-        --gradient-first-color: rgb(255, 253, 200);
-        --gradient-second-color: rgb(255, 253, 200);
+        --gradient-first-color: rgb(255, 226, 208);
+        --gradient-second-color: rgb(255, 226, 208);
     }
     50% {
         --gradient-first-color:  rgb(255, 0, 60);
-        --gradient-second-color:  rgb(255, 253, 200);
+        --gradient-second-color:  rgb(255, 226, 208);
     }
     75% {
         --gradient-first-color:  rgb(255, 0, 60);
         --gradient-second-color:  rgb(255, 0, 60);
     }
     100% {
-        --gradient-first-color: rgb(255, 253, 200);
+        --gradient-first-color: rgb(255, 226, 208);
         --gradient-second-color: rgb(255, 0, 60);
     }
 }

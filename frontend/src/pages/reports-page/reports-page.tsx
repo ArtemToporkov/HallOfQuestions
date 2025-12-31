@@ -1,4 +1,4 @@
-﻿import { type ReactElement, useState } from 'react';
+﻿import { type ReactElement, useState, useRef, type FormEvent } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import type { ReportData } from '../../types/report-data.ts';
@@ -6,18 +6,16 @@ import { ReportInfo } from '../../components/report-info/report-info.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
 
 import './reports-page.css';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
 
-type ConferencesPageProps = {
-    reports: ReportData[];
-}
-
-function ReportsPageHeader(): ReactElement {
+function ReportsPageHeader({ handleCreateClick }: { handleCreateClick: () => void }): ReactElement {
     return (
         <div className="reports-page__header">
             <span className="reports-page__header-text">
                 Доклады
             </span>
-            <button className="reports-page__header-create-button">
+            <button className="reports-page__header-create-button" onClick={handleCreateClick}>
                 Создать
             </button>
         </div>
@@ -81,13 +79,58 @@ function ReportsList({ reports }: { reports: ReportData[] }) {
     );
 }
 
-export function ReportsPage({ reports }: ConferencesPageProps): ReactElement {
+export function ReportsPage(): ReactElement {
     const [chosenStatus, setChosenStatus] = useState<ReportStatus>(ReportStatus.Started);
+    const [, setIsModalOpen] = useState(false);
+    const dialogRef = useRef<HTMLDialogElement>(null);
+    const queryClient = useQueryClient();
+
+    const { data: reports = [] } = useQuery({
+        queryKey: ['reports'],
+        queryFn: getReports
+    });
+
+    const createReportMutation = useMutation({
+        mutationFn: addReport,
+        onSuccess: async () => {
+            await queryClient.invalidateQueries({ queryKey: ['reports'] });
+            closeModal();
+        }
+    });
+
+    const openModal = () => {
+        setIsModalOpen(true);
+        dialogRef.current?.showModal();
+    }
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+        dialogRef.current?.close();
+    }
+
+    const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const formData = new FormData(e.currentTarget);
+
+        const request: AddReportRequest = {
+            reportTitle: formData.get('reportTitle') as string,
+            reportStartDate: new Date(formData.get('reportStartDate') as string).toISOString(),
+            reportEndDate: new Date(formData.get('reportEndDate') as string).toISOString(),
+            speaker: {
+                name: formData.get('speakerName') as string,
+                surname: formData.get('speakerSurname') as string
+            }
+        };
+
+        createReportMutation.mutate(request);
+    }
+
     const reportsByStatus = reports.filter((r) => r.status === chosenStatus);
+
     return (
         <Layout>
             <div className="reports-page__container">
-                <ReportsPageHeader />
+                <ReportsPageHeader handleCreateClick={openModal} />
 
                 <StatusChoice
                     checkedConditionCallback={(status) => status === chosenStatus}
@@ -100,6 +143,38 @@ export function ReportsPage({ reports }: ConferencesPageProps): ReactElement {
                         : <span className="reports-page__reports-list-empty">Докладов не найдено</span>
                 }
             </div>
+
+            <dialog ref={dialogRef} className="reports-page__create-modal">
+                <span className="reports-page__create-header">Создать доклад</span>
+
+                <form onSubmit={handleSubmit} className="reports-page__create-form" id="createForm">
+                    <div className="reports-page__create-section">
+                        <span className="reports-page__create-section-header">Название</span>
+                        <input className="reports-page__create-section-input" name="reportTitle" placeholder="Название" required minLength={10} maxLength={50} />
+                    </div>
+
+                    <div className="reports-page__create-section">
+                        <span className="reports-page__create-section-header">Спикер</span>
+                        <input className="reports-page__create-section-input" name="speakerName" placeholder="Имя" required />
+                        <input className="reports-page__create-section-input" name="speakerSurname" placeholder="Фамилия" required />
+                    </div>
+
+                    <div className="reports-page__create-section">
+                        <label htmlFor="reportStartDate">Начало</label>
+                        <input className="reports-page__create-section-input" name="reportStartDate" type="datetime-local" required />
+                    </div>
+
+                    <div className="reports-page__create-section">
+                        <label htmlFor="reportTitle">Конец</label>
+                        <input className="reports-page__create-section-input" name="reportEndDate" type="datetime-local" required />
+                    </div>
+                </form>
+
+                <div className="reports-page__create-actions">
+                    <button className="reports-page__create-close" type="button" onClick={closeModal}>Отмена</button>
+                    <button className="reports-page__create-send" disabled={createReportMutation.isPending} type="submit" form="createForm">Создать</button>
+                </div>
+            </dialog>
         </Layout>
     );
 }

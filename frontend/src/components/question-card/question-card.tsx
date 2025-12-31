@@ -1,5 +1,8 @@
-﻿import { type ReactElement, useState } from 'react';
+﻿import type { ReactElement } from 'react';
 import classNames from 'classnames';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
+import { likeQuestion } from '../../api/api.ts';
 import type { QuestionData } from '../../types/question-data.ts';
 
 import './question-card.css';
@@ -9,8 +12,13 @@ type QuestionCardProps = {
 }
 
 export function QuestionCard({ question }: QuestionCardProps): ReactElement {
-    const [isLiked, setIsLiked] = useState(false);
-    const [likesCount, setLikesCount] = useState(question.likesCount);
+    const queryClient = useQueryClient();
+
+    const likeMutation = useMutation({
+        mutationFn: () => likeQuestion(question.reportId, question.id),
+        onSuccess: () => queryClient.invalidateQueries({queryKey: [`report/${question.reportId}`]})
+    });
+
     return (
         <div className="question-card">
             <div className="question-card__question">
@@ -21,20 +29,14 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
                 <button
                     className={classNames(
                         'question-card__like-button',
-                        { 'question-card__like-button-liked': isLiked }
+                        { 'question-card__like-button-liked': false }
                     )}
                     type="button"
                     aria-label="like"
-                    onClick={() => {
-                        if (isLiked) {
-                            setLikesCount(likesCount - 1);
-                        } else {
-                            setLikesCount(likesCount + 1);
-                        }
-                        setIsLiked(!isLiked);
-                    }}
+                    onClick={() => likeMutation.mutate()}
+                    disabled={likeMutation.isPending}
                 />
-                <span className="question-card__likes-count">{likesCount}</span>
+                <span className="question-card__likes-count">{question.likesCount}</span>
             </div>
         </div>
     );
