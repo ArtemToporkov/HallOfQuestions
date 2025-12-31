@@ -29,7 +29,7 @@ function showProblemToast(problem: ProblemDetails) {
             .forEach(message => toast.error(message));
         return;
     }
-    toast.error(problem.title ?? problem.detail ?? 'Произошла ошибка');
+    toast.error(problem.detail ?? problem.title ?? 'An error occurred');
 }
 
 api.interceptors.response.use(
@@ -37,7 +37,7 @@ api.interceptors.response.use(
     (error: AxiosError<ProblemDetails>) => {
         const problem = error.response?.data;
         if (!problem) {
-            toast.error('Сетевая ошибка или сервер недоступен');
+            toast.error('Network error or server is unavailable');
             return Promise.reject(error);
         }
         showProblemToast(problem);

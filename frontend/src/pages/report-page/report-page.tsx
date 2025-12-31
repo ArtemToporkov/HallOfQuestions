@@ -5,15 +5,31 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportDetails } from '../../components/report-details/report-details.tsx';
 import { QuestionCard } from '../../components/question-card/question-card.tsx';
-import { addQuestion, endReport, getQuestions, getReports, startReport, type AddQuestionRequest } from '../../api/api.ts';
+import {
+    addQuestion,
+    type AddQuestionRequest,
+    endReport,
+    getQuestions,
+    getReports,
+    startReport
+} from '../../api/api.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
 
 import './report-page.css';
 
-function ReportPageHeader({ onAskClick }: {
+function getEmptyQuestionsMessage(reportStatus: ReportStatus): string {
+    switch (reportStatus) {
+        case ReportStatus.Ended:
+            return 'Вопросов спикеру не было';
+        case ReportStatus.Started:
+            return 'Вопросов пока нет';
+        case ReportStatus.NotStarted:
+            return 'Доклад ещё не начался';
+    }
+}
+
+function ReportPageHeader({ onAskClick, status }: {
     onAskClick: () => void,
-    onStartClick: () => void,
-    onEndClick: () => void,
     status: ReportStatus
 }): ReactElement {
     return (
@@ -21,11 +37,14 @@ function ReportPageHeader({ onAskClick }: {
             <span className="report-page__header-text">
                 Вопросы
             </span>
-            <div className="report-page__header-actions">
-                <button className="report-page__header-ask-button" onClick={onAskClick}>
-                    Задать
-                </button>
-            </div>
+            {
+                status === ReportStatus.Started &&
+                    <div className="report-page__header-actions">
+                        <button className="report-page__header-ask-button" onClick={onAskClick}>
+                            Задать
+                        </button>
+                    </div>
+            }
         </div>
     );
 }
@@ -105,8 +124,6 @@ export function ReportPage(): ReactElement {
                 />
                 <ReportPageHeader
                     onAskClick={openModal}
-                    onStartClick={() => startMutation.mutate()}
-                    onEndClick={() => endMutation.mutate()}
                     status={report.status}
                 />
                 <div className="report-page__questions-list">
@@ -115,7 +132,7 @@ export function ReportPage(): ReactElement {
                     ))}
                     {reportQuestions.length === 0 && (
                         <div className="report-page__questions-list-empty">
-                            <span>Вопросов пока нет</span>
+                            <span>{getEmptyQuestionsMessage(report.status)}</span>
                         </div>
                     )}
                 </div>
