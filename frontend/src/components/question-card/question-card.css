@@ -19,6 +19,7 @@
 
 .question-card__question-theme {
     font-weight: bold;
+    font-size: var(--font-size-h2);
 }
 
 .question-card__question-text {

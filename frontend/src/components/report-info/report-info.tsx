@@ -55,7 +55,7 @@ export function ReportInfo({ report, questionsCount = 0 }: ConferenceInfoProps):
             <div className="report-info__header">
                 <span className="report-info__title">{report.title}</span>
                 <span className="report-info__speaker">
-                    {`${report.speakerInfo.name} ${report.speakerInfo.surname}`}
+                    {`${report.speaker.name} ${report.speaker.surname}`}
                 </span>
             </div>
 

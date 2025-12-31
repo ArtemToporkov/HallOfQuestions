@@ -5,7 +5,7 @@ import type { IsoString } from './iso-string.ts';
 export type ReportData = {
     id: string;
     title: string;
-    speakerInfo: SpeakerData;
+    speaker: SpeakerData;
     scheduledStartDate: IsoString;
     scheduledEndDate: IsoString;
     status: ReportStatus;

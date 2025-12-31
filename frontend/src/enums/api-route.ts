@@ -1,8 +1,8 @@
 ﻿export enum ApiRoute {
-    Conferences = '/conferences',
-    Questions = '/conferences/:id/questions',
-    StartConference = '/conferences/:id/start',
-    EndConference = '/conferences/:id/end',
-    LikeQuestion = '/conferences/:conferenceId/questions/:questionId/like',
-    UnlikeQuestion = '/conferences/:conferenceId/questions/:questionId/unlike'
+    Reports = '/reports',
+    Questions = '/reports/:id/questions',
+    StartReport = '/reports/:id/start',
+    EndReport = '/reports/:id/end',
+    LikeQuestion = '/reports/:reportId/questions/:questionId/like',
+    UnlikeQuestion = '/reports/:reportId/questions/:questionId/unlike'
 }

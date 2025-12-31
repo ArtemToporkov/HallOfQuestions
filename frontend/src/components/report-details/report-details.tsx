@@ -29,7 +29,7 @@ export function ReportDetails({ report }: ReportDetailsProps): ReactElement {
             <div className="report-details__header">
                 <span className="report-details__title">{report.title}</span>
                 <div className="report-details__speaker">
-                    {report.speakerInfo.name} {report.speakerInfo.surname}
+                    {report.speaker.name} {report.speaker.surname}
                 </div>
             </div>
 

@@ -5,7 +5,7 @@ export const REPORTS: ReportData[] = [
     {
         id: '1',
         title: 'Как (не) потерять данные в PostgreSQL',
-        speakerInfo: {
+        speaker: {
             name: 'Кирилл',
             surname: 'Решке'
         },
@@ -16,7 +16,7 @@ export const REPORTS: ReportData[] = [
     {
         id: '2',
         title: 'Как мы писали свой lock-free dictionary',
-        speakerInfo: {
+        speaker: {
             name: 'Антон',
             surname: 'Нечуговских'
         },
@@ -27,7 +27,7 @@ export const REPORTS: ReportData[] = [
     {
         id: '3',
         title: 'Шардируем Postgres не своими руками',
-        speakerInfo: {
+        speaker: {
             name: 'Кирилл',
             surname: 'Решке'
         },
@@ -39,7 +39,7 @@ export const REPORTS: ReportData[] = [
     {
         id: '4',
         title: 'Шардируем Postgres не своими руками',
-        speakerInfo: {
+        speaker: {
             name: 'Кирилл',
             surname: 'Решке'
         },
