@@ -32,12 +32,7 @@
 }
 
 .report-page__header-ask-button:hover {
-    background: linear-gradient(
-            to right,
-            var(--gradient-first-color),
-            var(--gradient-second-color),
-            var(--gradient-third-color)
-    );
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 }
 
 .report-page__questions-list-empty,

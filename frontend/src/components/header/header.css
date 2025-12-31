@@ -10,12 +10,7 @@
 
 .header__text {
     font-weight: bold;
-    background: linear-gradient(
-        to right,
-        var(--gradient-first-color),
-        var(--gradient-second-color),
-        var(--gradient-third-color)
-    );
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

@@ -46,12 +46,7 @@
 
 .question-card__like-button-liked {
     border: none;
-    background: linear-gradient(
-            to right,
-            var(--gradient-first-color),
-            var(--gradient-second-color),
-            var(--gradient-third-color)
-    );
+    background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 }
 
 .question-card__likes-count {
