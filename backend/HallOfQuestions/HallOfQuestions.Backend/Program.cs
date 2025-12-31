@@ -5,17 +5,27 @@ using HallOfQuestions.Backend.Repositories.Abstractions;
 using HallOfQuestions.Backend.Repositories.Implementations;
 using HallOfQuestions.Backend.Requests;
 using Microsoft.AspNetCore.Mvc;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
 builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
+builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-app.UseHttpsRedirection();
 app.UseExceptionHandler();
+
+app.UseHttpsRedirection();
+
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.MapScalarApiReference();
+}
 
 app.MapGet("/api/reports", async (
     [FromServices] IReportRepository repository) =>
