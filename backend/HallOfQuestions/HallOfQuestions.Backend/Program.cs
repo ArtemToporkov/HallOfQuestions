@@ -17,6 +17,12 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    context.Response.Headers["X-Replica-ID"] = Environment.MachineName;
+    await next();
+});
+
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
