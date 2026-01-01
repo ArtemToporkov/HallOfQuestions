@@ -27,5 +27,6 @@ public class Question
     {
         if (LikesCount == 0)
             throw new DomainException("Likes count cannot be negative");
+        LikesCount--;
     }
 }
