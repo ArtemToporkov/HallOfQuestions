@@ -92,8 +92,10 @@ export function ReportsPage(): ReactElement {
 
     const createReportMutation = useMutation({
         mutationFn: addReport,
-        onSuccess: async () => {
-            await queryClient.invalidateQueries({ queryKey: ['reports'] });
+        onSuccess: (newReport) => {
+            queryClient.setQueryData(['reports'], (oldReports: ReportData[] | undefined) => {
+                return oldReports ? [...oldReports, newReport] : [newReport];
+            });
             closeModal();
         }
     });

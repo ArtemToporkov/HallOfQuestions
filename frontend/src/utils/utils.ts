@@ -69,3 +69,36 @@ export function convertReportStatusToString(
             return '';
     }
 }
+
+const LIKED_QUESTIONS_KEY = 'liked_questions_ids';
+
+const getLikedIds = (): string[] => {
+    const stored = localStorage.getItem(LIKED_QUESTIONS_KEY);
+    try {
+        return stored ? JSON.parse(stored) : [];
+    } catch {
+        return [];
+    }
+};
+
+export const isQuestionLiked = (questionId: string): boolean => {
+    const ids = getLikedIds();
+    return ids.includes(questionId);
+};
+
+export const toggleQuestionLikeInStorage = (questionId: string): boolean => {
+    const ids = getLikedIds();
+    const index = ids.indexOf(questionId);
+    let isLikedNow: boolean;
+
+    if (index !== -1) {
+        ids.splice(index, 1);
+        isLikedNow = false;
+    } else {
+        ids.push(questionId);
+        isLikedNow = true;
+    }
+
+    localStorage.setItem(LIKED_QUESTIONS_KEY, JSON.stringify(ids));
+    return isLikedNow;
+};

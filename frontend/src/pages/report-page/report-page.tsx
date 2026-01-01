@@ -14,6 +14,8 @@ import {
     startReport
 } from '../../api/api.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
+import type { ReportData } from '../../types/report-data.ts';
+import type { QuestionData } from '../../types/question-data.ts';
 
 import './report-page.css';
 
@@ -39,11 +41,11 @@ function ReportPageHeader({ onAskClick, status }: {
             </span>
             {
                 status === ReportStatus.Started &&
-                    <div className="report-page__header-actions">
-                        <button className="report-page__header-ask-button" onClick={onAskClick}>
-                            Задать
-                        </button>
-                    </div>
+                <div className="report-page__header-actions">
+                    <button className="report-page__header-ask-button" onClick={onAskClick}>
+                        Задать
+                    </button>
+                </div>
             }
         </div>
     );
@@ -69,18 +71,30 @@ export function ReportPage(): ReactElement {
 
     const startMutation = useMutation({
         mutationFn: () => startReport(id as string),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports'] })
+        onSuccess: (updatedReport) => {
+            queryClient.setQueryData(['reports'], (oldReports: ReportData[] | undefined) => {
+                if (!oldReports) return [];
+                return oldReports.map(r => r.id === updatedReport.id ? updatedReport : r);
+            });
+        }
     });
 
     const endMutation = useMutation({
         mutationFn: () => endReport(id as string),
-        onSuccess: () => queryClient.invalidateQueries({ queryKey: ['reports'] })
+        onSuccess: (updatedReport) => {
+            queryClient.setQueryData(['reports'], (oldReports: ReportData[] | undefined) => {
+                if (!oldReports) return [];
+                return oldReports.map(r => r.id === updatedReport.id ? updatedReport : r);
+            });
+        }
     });
 
     const addQuestionMutation = useMutation({
         mutationFn: (req: AddQuestionRequest) => addQuestion(id as string, req),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: [`report/${id}`] });
+        onSuccess: (newQuestion) => {
+            queryClient.setQueryData([`report/${id}`], (oldQuestions: QuestionData[] | undefined) => {
+                return oldQuestions ? [...oldQuestions, newQuestion] : [newQuestion];
+            });
             closeModal();
         }
     });

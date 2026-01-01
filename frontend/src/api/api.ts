@@ -57,18 +57,21 @@ export type AddReportRequest = {
     speaker: SpeakerData
 }
 
-export const addReport = async (request: AddReportRequest): Promise<void> => {
-    await api.post(ApiRoute.Reports, request);
+export const addReport = async (request: AddReportRequest): Promise<ReportData> => {
+    const response = await api.post<ReportData>(ApiRoute.Reports, request);
+    return response.data;
 }
 
-export const startReport = async (reportId: string): Promise<void> => {
+export const startReport = async (reportId: string): Promise<ReportData> => {
     const path = generatePath(ApiRoute.StartReport, { id: reportId });
-    await api.post(path);
+    const response = await api.post<ReportData>(path);
+    return response.data;
 }
 
-export const endReport = async (reportId: string): Promise<void> => {
+export const endReport = async (reportId: string): Promise<ReportData> => {
     const path = generatePath(ApiRoute.EndReport, { id: reportId });
-    await api.post(path);
+    const response = await api.post<ReportData>(path);
+    return response.data;
 }
 
 export const getQuestions = async (reportId: string): Promise<QuestionData[]> => {
@@ -82,12 +85,20 @@ export type AddQuestionRequest = {
     questionText: string;
 }
 
-export const addQuestion = async (reportId: string, request: AddQuestionRequest): Promise<void> => {
+export const addQuestion = async (reportId: string, request: AddQuestionRequest): Promise<QuestionData> => {
     const path = generatePath(ApiRoute.Questions, { id: reportId });
-    await api.post(path, request);
+    const response = await api.post<QuestionData>(path, request);
+    return response.data;
 }
 
-export const likeQuestion = async (reportId: string, questionId: string): Promise<void> => {
+export const likeQuestion = async (reportId: string, questionId: string): Promise<QuestionData> => {
     const path = generatePath(ApiRoute.LikeQuestion, { reportId, questionId });
-    await api.post(path);
+    const response = await api.post<QuestionData>(path);
+    return response.data;
+}
+
+export const unlikeQuestion = async (reportId: string, questionId: string): Promise<QuestionData> => {
+    const path = generatePath(ApiRoute.UnlikeQuestion, { reportId, questionId });
+    const response = await api.post<QuestionData>(path);
+    return response.data;
 }

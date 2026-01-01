@@ -1,8 +1,9 @@
-﻿import type { ReactElement } from 'react';
-import classNames from 'classnames';
+﻿import classNames from 'classnames';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, type ReactElement } from 'react';
 
-import { likeQuestion } from '../../api/api.ts';
+import { likeQuestion, unlikeQuestion } from '../../api/api.ts';
+import { isQuestionLiked, toggleQuestionLikeInStorage } from '../../utils/utils.ts';
 import type { QuestionData } from '../../types/question-data.ts';
 
 import './question-card.css';
@@ -13,10 +14,30 @@ type QuestionCardProps = {
 
 export function QuestionCard({ question }: QuestionCardProps): ReactElement {
     const queryClient = useQueryClient();
+    const [isLiked, setIsLiked] = useState(() => isQuestionLiked(question.id));
 
-    const likeMutation = useMutation({
-        mutationFn: () => likeQuestion(question.reportId, question.id),
-        onSuccess: () => queryClient.invalidateQueries({queryKey: [`report/${question.reportId}`]})
+    const toggleLikeMutation = useMutation({
+        mutationFn: async () => {
+            if (isLiked) {
+                return await unlikeQuestion(question.reportId, question.id);
+            } else {
+                return await likeQuestion(question.reportId, question.id);
+            }
+        },
+        onSuccess: (updatedQuestion) => {
+            const newLikedState = toggleQuestionLikeInStorage(question.id);
+            setIsLiked(newLikedState);
+
+            queryClient.setQueryData(
+                [`report/${question.reportId}`],
+                (oldQuestions: QuestionData[] | undefined) => {
+                    if (!oldQuestions) return [];
+                    return oldQuestions.map((q) =>
+                        q.id === updatedQuestion.id ? updatedQuestion : q
+                    );
+                }
+            );
+        }
     });
 
     return (
@@ -29,12 +50,12 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
                 <button
                     className={classNames(
                         'question-card__like-button',
-                        { 'question-card__like-button-liked': false }
+                        { 'question-card__like-button-liked': isLiked }
                     )}
                     type="button"
-                    aria-label="like"
-                    onClick={() => likeMutation.mutate()}
-                    disabled={likeMutation.isPending}
+                    aria-label={isLiked ? "unlike" : "like"}
+                    onClick={() => toggleLikeMutation.mutate()}
+                    disabled={toggleLikeMutation.isPending}
                 />
                 <span className="question-card__likes-count">{question.likesCount}</span>
             </div>
