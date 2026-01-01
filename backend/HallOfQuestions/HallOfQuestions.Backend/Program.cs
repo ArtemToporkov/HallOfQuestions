@@ -46,6 +46,7 @@ app.MapPost("/api/reports", async (
         request.ReportStartDate,
         request.ReportEndDate);
     await repository.AddAsync(report);
+    return Results.Created($"/api/reports/{report.Id}", report);
 });
 
 app.MapPost("/api/reports/{id}/start", async (
@@ -56,6 +57,7 @@ app.MapPost("/api/reports/{id}/start", async (
     if (report is null)
         throw new NotFoundException(nameof(Report), id);
     report.Start(DateTime.UtcNow);
+    return report;
 });
 
 app.MapPost("/api/reports/{id}/end", async (
@@ -66,6 +68,7 @@ app.MapPost("/api/reports/{id}/end", async (
     if (report is null)
         throw new NotFoundException(nameof(Report), id);
     report.End(DateTime.UtcNow);
+    return report;
 });
 
 app.MapGet("/api/reports/{id}/questions", async (
@@ -73,7 +76,7 @@ app.MapGet("/api/reports/{id}/questions", async (
     [FromServices] IQuestionRepository repository) =>
 {
     var questions = await repository.GetAllForReportAsync(id);
-    return Results.Ok(questions);
+    return questions;
 });
 
 app.MapPost("/api/reports/{id}/questions", async (
@@ -92,6 +95,7 @@ app.MapPost("/api/reports/{id}/questions", async (
         request.QuestionText,
         DateTime.UtcNow);
     await questionRepository.AddAsync(question);
+    return Results.Created($"/api/reports/{id}/questions/{question.Id}", question);
 });
 
 app.MapPost("/api/reports/{reportId}/questions/{questionId}/like", async (
@@ -105,6 +109,21 @@ app.MapPost("/api/reports/{reportId}/questions/{questionId}/like", async (
     if (question.ReportId != reportId)
         throw new BadRequestException("Question does not belong to this report");
     question.Like();
+    return question;
+});
+
+app.MapPost("/api/reports/{reportId}/questions/{questionId}/unlike", async (
+    [FromRoute] string reportId,
+    [FromRoute] string questionId,
+    [FromServices] IQuestionRepository repository) =>
+{
+    var question = await repository.GetByIdAsync(questionId);
+    if (question is null)
+        throw new NotFoundException(nameof(Question), questionId);
+    if (question.ReportId != reportId)
+        throw new BadRequestException("Question does not belong to this report");
+    question.Unlike();
+    return question;
 });
 
 app.Run();
