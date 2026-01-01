@@ -1,10 +1,12 @@
 ﻿import axios, { type AxiosError } from 'axios';
-import type { QuestionData } from '../types/question-data.ts';
 import { generatePath } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { ApiRoute } from '../enums/api-route.ts';
+
+import { setReplicaId } from '../services/backend-replica-store.ts';
 import type { ReportData } from '../types/report-data.ts';
 import type { SpeakerData } from '../types/speaker-data.ts';
-import { toast } from 'react-toastify';
+import type { QuestionData } from '../types/question-data.ts';
 
 const api = axios.create({
     baseURL: '/api',
@@ -32,9 +34,25 @@ function showProblemToast(problem: ProblemDetails) {
     toast.error(problem.detail ?? problem.title ?? 'An error occurred');
 }
 
+const replicaIdHeader = 'x-replica-id';
+
+const setReplicaIdOrErrorMessage = (id: string | string[] | undefined)=> {
+    if (id && typeof id === 'string') {
+        setReplicaId(id);
+    } else {
+        setReplicaId(`missing header "${replicaIdHeader}" in server response`);
+    }
+}
+
 api.interceptors.response.use(
-    response => response,
+    response => {
+        const replicaId = response.headers[replicaIdHeader];
+        setReplicaIdOrErrorMessage(replicaId);
+        return response;
+    },
     (error: AxiosError<ProblemDetails>) => {
+        const replicaId = error.response?.headers[replicaIdHeader];
+        setReplicaIdOrErrorMessage(replicaId);
         const problem = error.response?.data;
         if (!problem) {
             toast.error('Network error or server is unavailable');

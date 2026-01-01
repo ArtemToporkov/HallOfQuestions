@@ -1,12 +1,17 @@
-﻿import type { ReactElement } from 'react';
+﻿import { type ReactElement, useEffect, useState } from 'react';
 
 import './footer.css';
+import { getReplicaId, subscribeToReplicaId } from '../../services/backend-replica-store.ts';
 
 export function Footer(): ReactElement {
+    const [backendReplicaId, setBackendReplicaId] = useState(getReplicaId());
+    useEffect(() => {
+        return subscribeToReplicaId((id) => setBackendReplicaId(id));
+    })
     return (
         <footer className="footer">
             <span className="footer__text">
-                backend replica v1.1.1-hfa7s65dfhkasjhf
+                latest backend replica: {backendReplicaId}
             </span>
             <span className="footer__text">
                 frontend {import.meta.env.FRONTEND_VERSION ?? `v?.?.?`}
