@@ -2,20 +2,15 @@ using HallOfQuestions.Backend.Domain.Entities;
 using HallOfQuestions.Backend.Domain.Repositories;
 using HallOfQuestions.Backend.ExceptionHandling;
 using HallOfQuestions.Backend.Exceptions;
+using HallOfQuestions.Backend.Extensions;
 using HallOfQuestions.Backend.Infrastructure.Repositories;
 using HallOfQuestions.Backend.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
-using Ydb.Sdk.Ado;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton(_ =>
-{
-    var connectionString = builder.Configuration.GetConnectionString("Ydb") ??
-                           throw new ArgumentException("Missing \"Ydb\" connection string in configuration");
-    return new YdbDataSource(connectionString);
-});
+builder.Services.AddYdbDataSource(builder.Configuration);
 builder.Services.AddScoped<IQuestionRepository, YdbQuestionRepository>();
 builder.Services.AddScoped<IReportRepository, YdbReportRepository>();
 builder.Services.AddProblemDetails();
