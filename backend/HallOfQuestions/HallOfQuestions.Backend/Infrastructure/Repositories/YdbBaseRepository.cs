@@ -1,4 +1,5 @@
 ﻿using Ydb.Sdk.Ado;
+using Ydb.Sdk.Value;
 
 namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
@@ -6,7 +7,7 @@ public abstract class YdbBaseRepository(YdbDataSource ydbDataSource)
 {
     protected async Task ExecuteNonQueryCommandAsync(
         string sql,
-        Dictionary<string, object>? parameters = null,
+        Dictionary<string, YdbValue>? parameters = null,
         CancellationToken cancellationToken = default)
     {
         await using var connection = await ydbDataSource.OpenConnectionAsync(cancellationToken);
@@ -21,7 +22,7 @@ public abstract class YdbBaseRepository(YdbDataSource ydbDataSource)
     protected async Task<TResult> ExecuteReaderCommandAsync<TResult>(
         string sql,
         Func<YdbDataReader, Task<TResult>> resultFromReaderFactory,
-        Dictionary<string, object>? parameters = null,
+        Dictionary<string, YdbValue>? parameters = null,
         CancellationToken cancellationToken = default)
     {
         await using var connection = await ydbDataSource.OpenConnectionAsync(cancellationToken);

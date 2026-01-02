@@ -2,6 +2,7 @@
 using HallOfQuestions.Backend.Domain.Enums;
 using HallOfQuestions.Backend.Domain.Repositories;
 using Ydb.Sdk.Ado;
+using Ydb.Sdk.Value;
 
 namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
@@ -68,7 +69,7 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                             FROM reports
                             WHERE {IdColumnName} = ${IdColumnName};
                             """;
-        var parameters = new Dictionary<string, object> { [$"${IdColumnName}"] = id };
+        var parameters = new Dictionary<string, YdbValue> { [$"${IdColumnName}"] = YdbValue.MakeUtf8(id) };
         var report = await ExecuteReaderCommandAsync(
             sql,
             async reader =>
@@ -129,18 +130,18 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
         await ExecuteNonQueryCommandAsync(sql, parameters: parameters, cancellationToken: cancellationToken);
     }
 
-    private static Dictionary<string, object> GetReportParameters(Report report) =>
+    private static Dictionary<string, YdbValue> GetReportParameters(Report report) =>
         new()
         {
-            [IdColumnName] = report.Id,
-            [TitleColumnName] = report.Title,
-            [SpeakerNameColumnName] = report.Speaker.Name,
-            [SpeakerSurnameColumnName] = report.Speaker.Surname,
-            [ScheduledStartDateColumnName] = report.ScheduledStartDate,
-            [ScheduledEndDateColumnName] = report.ScheduledEndDate,
-            [ActualStartDateColumnName] = report.ActualStartDate ?? (object)"null",
-            [ActualEndDateColumnName] = report.ActualEndDate ?? (object)"null",
-            [StatusColumnName] = MapReportStatusToString(report.Status)
+            [IdColumnName] = YdbValue.MakeUtf8(report.Id),
+            [TitleColumnName] = YdbValue.MakeUtf8(report.Title),
+            [SpeakerNameColumnName] = YdbValue.MakeUtf8(report.Speaker.Name),
+            [SpeakerSurnameColumnName] = YdbValue.MakeUtf8(report.Speaker.Surname),
+            [ScheduledStartDateColumnName] = YdbValue.MakeDatetime(report.ScheduledStartDate),
+            [ScheduledEndDateColumnName] = YdbValue.MakeDatetime(report.ScheduledEndDate),
+            [ActualStartDateColumnName] = YdbValue.MakeOptionalDatetime(report.ActualStartDate),
+            [ActualEndDateColumnName] = YdbValue.MakeOptionalDatetime(report.ActualEndDate),
+            [StatusColumnName] = YdbValue.MakeUtf8(MapReportStatusToString(report.Status))
         };
 
     private static Report GetReportFromReader(YdbDataReader reader)

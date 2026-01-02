@@ -1,6 +1,7 @@
 ﻿using HallOfQuestions.Backend.Domain.Entities;
 using HallOfQuestions.Backend.Domain.Repositories;
 using Ydb.Sdk.Ado;
+using Ydb.Sdk.Value;
 
 namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
@@ -50,7 +51,7 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                             FROM questions
                             WHERE {ReportIdColumnName} = ${ReportIdColumnName}
                             """;
-        var parameters = new Dictionary<string, object> { [$"${ReportIdColumnName}"] = reportId };
+        var parameters = new Dictionary<string, YdbValue> { [$"${ReportIdColumnName}"] = YdbValue.MakeUtf8(reportId) };
         var questions = await ExecuteReaderCommandAsync(
             sql,
             async reader =>
@@ -78,7 +79,7 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                             FROM questions
                             WHERE {IdColumnName} = ${IdColumnName}
                             """;
-        var parameters = new Dictionary<string, object> { [$"${IdColumnName}"] = id };
+        var parameters = new Dictionary<string, YdbValue> { [$"${IdColumnName}"] = YdbValue.MakeUtf8(id) };
         var question = await ExecuteReaderCommandAsync(
             sql,
             async reader =>
@@ -108,15 +109,15 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
         await ExecuteNonQueryCommandAsync(sql, parameters: parameters, cancellationToken: cancellationToken);
     }
 
-    private static Dictionary<string, object> GetQuestionParameters(Question question) =>
+    private static Dictionary<string, YdbValue> GetQuestionParameters(Question question) =>
         new()
         {
-            [$"${IdColumnName}"] = question.Id,
-            [$"${ReportIdColumnName}"] = question.ReportId,
-            [$"${ThemeColumnName}"] = question.Theme,
-            [$"${TextColumnName}"] = question.Text,
-            [$"${CreatedAtColumnName}"] = question.CreatedAt,
-            [$"${LikesCountColumnName}"] = question.LikesCount
+            [$"${IdColumnName}"] = YdbValue.MakeUtf8(question.Id),
+            [$"${ReportIdColumnName}"] = YdbValue.MakeUtf8(question.ReportId),
+            [$"${ThemeColumnName}"] = YdbValue.MakeUtf8(question.Theme),
+            [$"${TextColumnName}"] = YdbValue.MakeUtf8(question.Theme),
+            [$"${CreatedAtColumnName}"] = YdbValue.MakeDatetime(question.CreatedAt),
+            [$"${LikesCountColumnName}"] = YdbValue.MakeInt32(question.LikesCount)
         };
 
     private static Question GetQuestionFromReader(YdbDataReader reader) =>
