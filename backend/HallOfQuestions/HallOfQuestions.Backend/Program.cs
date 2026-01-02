@@ -6,11 +6,18 @@ using HallOfQuestions.Backend.Repositories.Implementations;
 using HallOfQuestions.Backend.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;
+using Ydb.Sdk.Ado;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<IQuestionRepository, InMemoryQuestionRepository>();
-builder.Services.AddSingleton<IReportRepository, InMemoryReportRepository>();
+builder.Services.AddSingleton(_ =>
+{
+    var connectionString = builder.Configuration.GetConnectionString("Ydb") ??
+                           throw new ArgumentException("Missing \"Ydb\" connection string in configuration");
+    return new YdbDataSource(connectionString);
+});
+builder.Services.AddScoped<IQuestionRepository, YdbQuestionRepository>();
+builder.Services.AddScoped<IReportRepository, YdbReportRepository>();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
@@ -63,6 +70,7 @@ app.MapPost("/api/reports/{id}/start", async (
     if (report is null)
         throw new NotFoundException(nameof(Report), id);
     report.Start(DateTime.UtcNow);
+    await repository.SaveChangesAsync(report);
     return report;
 });
 
@@ -74,6 +82,7 @@ app.MapPost("/api/reports/{id}/end", async (
     if (report is null)
         throw new NotFoundException(nameof(Report), id);
     report.End(DateTime.UtcNow);
+    await repository.SaveChangesAsync(report);
     return report;
 });
 
@@ -115,6 +124,7 @@ app.MapPost("/api/reports/{reportId}/questions/{questionId}/like", async (
     if (question.ReportId != reportId)
         throw new BadRequestException("Question does not belong to this report");
     question.Like();
+    await repository.SaveChangesAsync(question);
     return question;
 });
 
@@ -129,6 +139,7 @@ app.MapPost("/api/reports/{reportId}/questions/{questionId}/unlike", async (
     if (question.ReportId != reportId)
         throw new BadRequestException("Question does not belong to this report");
     question.Unlike();
+    await repository.SaveChangesAsync(question);
     return question;
 });
 
