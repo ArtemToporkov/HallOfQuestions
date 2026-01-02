@@ -3,6 +3,7 @@ using HallOfQuestions.Backend.Domain.Repositories;
 using HallOfQuestions.Backend.ExceptionHandling;
 using HallOfQuestions.Backend.Exceptions;
 using HallOfQuestions.Backend.Extensions;
+using HallOfQuestions.Backend.Infrastructure.Persistence;
 using HallOfQuestions.Backend.Infrastructure.Repositories;
 using HallOfQuestions.Backend.Requests;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ using Scalar.AspNetCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddYdbDataSource(builder.Configuration);
+builder.Services.AddSingleton<YdbSchemaInitializer>();
 builder.Services.AddScoped<IQuestionRepository, YdbQuestionRepository>();
 builder.Services.AddScoped<IReportRepository, YdbReportRepository>();
 builder.Services.AddProblemDetails();
@@ -18,6 +20,16 @@ builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+if (args.Contains("--init-db"))
+{
+    var dropIfExist = args.Contains("--drop-if-exist");
+    var scope = app.Services.CreateScope();
+    var ydbSchemaInitializer = scope.ServiceProvider.GetRequiredService<YdbSchemaInitializer>();
+    await ydbSchemaInitializer.InitializeAsync(
+        dropIfExist: dropIfExist);
+    return;
+}
 
 app.Use(async (context, next) =>
 {
