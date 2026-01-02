@@ -140,7 +140,7 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             [ScheduledEndDateColumnName] = report.ScheduledEndDate,
             [ActualStartDateColumnName] = report.ActualStartDate ?? (object)"null",
             [ActualEndDateColumnName] = report.ActualEndDate ?? (object)"null",
-            [StatusColumnName] = report.Status
+            [StatusColumnName] = MapReportStatusToString(report.Status)
         };
 
     private static Report GetReportFromReader(YdbDataReader reader)
