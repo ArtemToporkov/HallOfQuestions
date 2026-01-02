@@ -25,6 +25,6 @@ public class InMemoryReportRepository : IReportRepository
     public Task<IEnumerable<Report>> GetAllAsync(CancellationToken cancellationToken = default) =>
         Task.FromResult(_reports.Values.AsEnumerable());
 
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
+    public Task SaveChangesAsync(Report _, CancellationToken cancellationToken = default) =>
         Task.CompletedTask;
 }

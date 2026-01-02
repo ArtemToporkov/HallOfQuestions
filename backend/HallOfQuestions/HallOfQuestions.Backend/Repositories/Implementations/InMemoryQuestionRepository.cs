@@ -29,5 +29,5 @@ public class InMemoryQuestionRepository : IQuestionRepository
         return Task.FromResult(question);
     }
 
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+    public Task SaveChangesAsync(Question _, CancellationToken cancellationToken = default) => Task.CompletedTask;
 }

@@ -11,5 +11,5 @@ public interface IQuestionRepository
     
     public Task<Question?> GetByIdAsync(string id, CancellationToken cancellationToken = default);
     
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    public Task SaveChangesAsync(Question question, CancellationToken cancellationToken = default);
 }

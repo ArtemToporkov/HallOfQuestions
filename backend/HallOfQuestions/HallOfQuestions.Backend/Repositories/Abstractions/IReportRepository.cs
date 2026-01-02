@@ -10,5 +10,5 @@ public interface IReportRepository
     
     public Task<IEnumerable<Report>> GetAllAsync(CancellationToken cancellationToken = default);
     
-    public Task SaveChangesAsync(CancellationToken cancellationToken = default);
+    public Task SaveChangesAsync(Report report, CancellationToken cancellationToken = default);
 }

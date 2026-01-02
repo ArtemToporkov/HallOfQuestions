@@ -9,7 +9,7 @@ public class Question
     public string Theme { get; }
     public string Text { get; }
     public DateTime CreatedAt { get; }
-    public int LikesCount { get; private set; }
+    public int LikesCount { get; set; }
 
     public Question(string id, string reportId, string theme, string text, DateTime createdAt)
     {

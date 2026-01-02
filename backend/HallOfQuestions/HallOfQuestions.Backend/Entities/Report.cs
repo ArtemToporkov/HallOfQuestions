@@ -10,9 +10,9 @@ public class Report
     public Person Speaker { get; }
     public DateTime ScheduledStartDate { get; }
     public DateTime ScheduledEndDate { get; }
-    public DateTime? ActualStartDate { get; private set; }
-    public DateTime? ActualEndDate { get; private set; }
-    public ReportStatus Status { get; private set; }
+    public DateTime? ActualStartDate { get; set; }
+    public DateTime? ActualEndDate { get; set; }
+    public ReportStatus Status { get; set; }
 
     public Report(string id, string title, Person speaker, DateTime scheduledStartDate, DateTime scheduledEndDate)
     {
