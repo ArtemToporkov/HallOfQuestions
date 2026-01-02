@@ -1,7 +1,7 @@
-﻿using HallOfQuestions.Backend.Enums;
+﻿using HallOfQuestions.Backend.Domain.Enums;
 using HallOfQuestions.Backend.Exceptions;
 
-namespace HallOfQuestions.Backend.Entities;
+namespace HallOfQuestions.Backend.Domain.Entities;
 
 public class Report
 {
@@ -10,9 +10,9 @@ public class Report
     public Person Speaker { get; }
     public DateTime ScheduledStartDate { get; }
     public DateTime ScheduledEndDate { get; }
-    public DateTime? ActualStartDate { get; set; }
-    public DateTime? ActualEndDate { get; set; }
-    public ReportStatus Status { get; set; }
+    public DateTime? ActualStartDate { get; private set; }
+    public DateTime? ActualEndDate { get; private set; }
+    public ReportStatus Status { get; private set; }
 
     public Report(string id, string title, Person speaker, DateTime scheduledStartDate, DateTime scheduledEndDate)
     {
@@ -26,6 +26,28 @@ public class Report
         ScheduledEndDate = scheduledEndDate;
         ActualEndDate = null;
         Status = ReportStatus.NotStarted;
+    }
+
+    public static Report FromState(
+        string id,
+        string title,
+        Person speaker,
+        DateTime scheduledStartDate,
+        DateTime scheduledEndDate,
+        DateTime? actualStartDate,
+        DateTime? actualEndDate,
+        ReportStatus status,
+        bool isValidated = true)
+    {
+        if (!isValidated)
+            throw new InvalidOperationException("State to initialize Report from should be validated");
+        var report = new Report(id, title, speaker, scheduledStartDate, scheduledEndDate)
+        {
+            ActualStartDate = actualStartDate,
+            ActualEndDate = actualEndDate,
+            Status = status
+        };
+        return report;
     }
     
     public void Start(DateTime startDate)

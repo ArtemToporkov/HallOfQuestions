@@ -1,8 +1,8 @@
-﻿using HallOfQuestions.Backend.Entities;
-using HallOfQuestions.Backend.Repositories.Abstractions;
+﻿using HallOfQuestions.Backend.Domain.Entities;
+using HallOfQuestions.Backend.Domain.Repositories;
 using Ydb.Sdk.Ado;
 
-namespace HallOfQuestions.Backend.Repositories.Implementations;
+namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
 public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseRepository(ydbDataSource), IQuestionRepository
 {
@@ -119,14 +119,13 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
             [$"${LikesCountColumnName}"] = question.LikesCount
         };
 
-    private static Question GetQuestionFromReader(YdbDataReader reader) => 
-        new(
+    private static Question GetQuestionFromReader(YdbDataReader reader) =>
+        Question.FromState(
             reader.GetFieldValue<string>(reader.GetOrdinal(IdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(ReportIdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(ThemeColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TextColumnName)),
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(CreatedAtColumnName)))
-        {
-            LikesCount = reader.GetFieldValue<int>(reader.GetOrdinal(LikesCountColumnName))
-        };
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(CreatedAtColumnName)),
+            reader.GetFieldValue<int>(reader.GetOrdinal(LikesCountColumnName)),
+            isValidated: true);
 }

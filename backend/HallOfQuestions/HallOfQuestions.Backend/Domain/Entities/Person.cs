@@ -1,6 +1,6 @@
 ﻿using HallOfQuestions.Backend.Exceptions;
 
-namespace HallOfQuestions.Backend.Entities;
+namespace HallOfQuestions.Backend.Domain.Entities;
 
 public class Person
 {

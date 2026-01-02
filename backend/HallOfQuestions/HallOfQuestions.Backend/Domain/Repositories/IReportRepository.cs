@@ -1,6 +1,6 @@
-﻿using HallOfQuestions.Backend.Entities;
+﻿using HallOfQuestions.Backend.Domain.Entities;
 
-namespace HallOfQuestions.Backend.Repositories.Abstractions;
+namespace HallOfQuestions.Backend.Domain.Repositories;
 
 public interface IReportRepository
 {

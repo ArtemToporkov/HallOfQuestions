@@ -1,9 +1,9 @@
 ﻿using System.Collections.Concurrent;
-using HallOfQuestions.Backend.Entities;
+using HallOfQuestions.Backend.Domain.Entities;
+using HallOfQuestions.Backend.Domain.Repositories;
 using HallOfQuestions.Backend.Exceptions;
-using HallOfQuestions.Backend.Repositories.Abstractions;
 
-namespace HallOfQuestions.Backend.Repositories.Implementations;
+namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
 public class InMemoryReportRepository : IReportRepository
 {

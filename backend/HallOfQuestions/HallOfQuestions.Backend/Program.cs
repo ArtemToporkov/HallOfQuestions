@@ -1,8 +1,8 @@
-using HallOfQuestions.Backend.Entities;
+using HallOfQuestions.Backend.Domain.Entities;
+using HallOfQuestions.Backend.Domain.Repositories;
 using HallOfQuestions.Backend.ExceptionHandling;
 using HallOfQuestions.Backend.Exceptions;
-using HallOfQuestions.Backend.Repositories.Abstractions;
-using HallOfQuestions.Backend.Repositories.Implementations;
+using HallOfQuestions.Backend.Infrastructure.Repositories;
 using HallOfQuestions.Backend.Requests;
 using Microsoft.AspNetCore.Mvc;
 using Scalar.AspNetCore;

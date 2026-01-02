@@ -1,6 +1,6 @@
 ﻿using Ydb.Sdk.Ado;
 
-namespace HallOfQuestions.Backend.Repositories.Implementations;
+namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
 public abstract class YdbBaseRepository(YdbDataSource ydbDataSource)
 {

@@ -1,6 +1,6 @@
 ﻿using HallOfQuestions.Backend.Exceptions;
 
-namespace HallOfQuestions.Backend.Entities;
+namespace HallOfQuestions.Backend.Domain.Entities;
 
 public class Question
 {
@@ -9,7 +9,7 @@ public class Question
     public string Theme { get; }
     public string Text { get; }
     public DateTime CreatedAt { get; }
-    public int LikesCount { get; set; }
+    public int LikesCount { get; private set; }
 
     public Question(string id, string reportId, string theme, string text, DateTime createdAt)
     {
@@ -20,6 +20,18 @@ public class Question
         CreatedAt = createdAt;
         LikesCount = 0;
     }
+
+    public static Question FromState(
+        string id,
+        string reportId,
+        string theme,
+        string text,
+        DateTime createdAt,
+        int likesCount,
+        bool isValidated = true) =>
+        !isValidated
+            ? throw new InvalidOperationException("State to initialize Question from should be validated")
+            : new Question(id, reportId, theme, text, createdAt) { LikesCount = likesCount };
 
     public void Like() => LikesCount++;
 

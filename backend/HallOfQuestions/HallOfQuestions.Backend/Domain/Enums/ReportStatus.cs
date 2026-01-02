@@ -1,4 +1,4 @@
-﻿namespace HallOfQuestions.Backend.Enums;
+﻿namespace HallOfQuestions.Backend.Domain.Enums;
 
 public enum ReportStatus
 {

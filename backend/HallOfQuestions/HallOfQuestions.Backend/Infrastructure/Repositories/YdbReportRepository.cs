@@ -1,9 +1,9 @@
-﻿using HallOfQuestions.Backend.Entities;
-using HallOfQuestions.Backend.Enums;
-using HallOfQuestions.Backend.Repositories.Abstractions;
+﻿using HallOfQuestions.Backend.Domain.Entities;
+using HallOfQuestions.Backend.Domain.Enums;
+using HallOfQuestions.Backend.Domain.Repositories;
 using Ydb.Sdk.Ado;
 
-namespace HallOfQuestions.Backend.Repositories.Implementations;
+namespace HallOfQuestions.Backend.Infrastructure.Repositories;
 
 public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepository(ydbDataSource), IReportRepository
 {
@@ -149,17 +149,16 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerNameColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerSurnameColumnName))
         );
-        return new Report(
+        return Report.FromState(
             reader.GetFieldValue<string>(reader.GetOrdinal(IdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TitleColumnName)),
             speaker,
             reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateColumnName)),
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateColumnName)))
-        {
-            ActualStartDate = reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualStartDateColumnName)),
-            ActualEndDate = reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualEndDateColumnName)),
-            Status = MapStringToReportStatus(reader.GetFieldValue<string>(reader.GetOrdinal(StatusColumnName)))
-        };
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateColumnName)),
+            reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualStartDateColumnName)),
+            reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualEndDateColumnName)),
+            MapStringToReportStatus(reader.GetFieldValue<string>(reader.GetOrdinal(StatusColumnName))),
+            isValidated: true);
     }
 
     private static string MapReportStatusToString(ReportStatus reportStatus) => reportStatus switch
