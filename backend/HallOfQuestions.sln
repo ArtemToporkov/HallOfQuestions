@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HallOfQuestions.Backend", "HallOfQuestions.Backend\HallOfQuestions.Backend.csproj", "{8E43ABB9-FE3C-4175-B3CD-559ED51C97BD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "src\HallOfQuestions.Backend", "src\HallOfQuestions.Backend\HallOfQuestions.Backend.csproj", "{8E43ABB9-FE3C-4175-B3CD-559ED51C97BD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
