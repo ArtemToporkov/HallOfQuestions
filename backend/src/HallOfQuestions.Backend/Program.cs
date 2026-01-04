@@ -11,7 +11,7 @@ using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddYdbDataSource(builder.Configuration);
+builder.Services.AddYdbDataSource(builder.Configuration, builder.Environment);
 builder.Services.AddSingleton<YdbSchemaInitializer>();
 builder.Services.AddScoped<IQuestionRepository, YdbQuestionRepository>();
 builder.Services.AddScoped<IReportRepository, YdbReportRepository>();

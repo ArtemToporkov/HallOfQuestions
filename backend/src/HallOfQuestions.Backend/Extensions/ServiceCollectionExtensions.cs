@@ -6,13 +6,16 @@ namespace HallOfQuestions.Backend.Extensions;
 
 public static class ServiceCollectionExtensions
 {
-    public static void AddYdbDataSource(this IServiceCollection services, IConfiguration configuration)
+    public static void AddYdbDataSource(
+        this IServiceCollection services,
+        IConfiguration configuration,
+        IWebHostEnvironment environment)
     {
         var connectionString = configuration.GetConnectionString("Ydb") ??
                                throw new ArgumentException("Missing \"Ydb\" connection string in configuration");
         var saFilePath = Path.Combine(AppContext.BaseDirectory, "sa-key.json");
         ICredentialsProvider credentialsProvider;
-        if (File.Exists(saFilePath))
+        if (environment.IsDevelopment() && File.Exists(saFilePath))
             credentialsProvider = new ServiceAccountProvider(saFilePath: saFilePath);
         else
             credentialsProvider = new MetadataProvider();
