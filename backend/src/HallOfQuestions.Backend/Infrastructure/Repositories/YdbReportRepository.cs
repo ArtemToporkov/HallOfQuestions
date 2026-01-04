@@ -55,7 +55,7 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
     public async Task<Report?> GetByIdAsync(string id, CancellationToken cancellationToken = default)
     {
         const string sql = $"""
-                            SELECT (
+                            SELECT
                                 {IdColumnName},
                                 {TitleColumnName},
                                 {SpeakerNameColumnName},
@@ -65,7 +65,6 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {ActualStartDateColumnName},
                                 {ActualEndDateColumnName},
                                 {StatusColumnName}
-                            )
                             FROM reports
                             WHERE {IdColumnName} = ${IdColumnName};
                             """;
@@ -86,7 +85,7 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
     public async Task<IEnumerable<Report>> GetAllAsync(CancellationToken cancellationToken = default)
     {
         const string sql = $"""
-                            SELECT (
+                            SELECT
                                 {IdColumnName},
                                 {TitleColumnName},
                                 {SpeakerNameColumnName},
@@ -96,7 +95,6 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {ActualStartDateColumnName},
                                 {ActualEndDateColumnName},
                                 {StatusColumnName}
-                            )
                             FROM reports;
                             """;
         var reports = await ExecuteReaderCommandAsync(
@@ -125,6 +123,7 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {ActualStartDateColumnName} = ${ActualEndDateColumnName},
                                 {ActualEndDateColumnName} = ${ActualEndDateColumnName},
                                 {StatusColumnName} = ${StatusColumnName}
+                            WHERE {IdColumnName} = ${IdColumnName}
                             """;
         var parameters = GetReportParameters(report);
         await ExecuteNonQueryCommandAsync(sql, parameters: parameters, cancellationToken: cancellationToken);
@@ -133,15 +132,15 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
     private static Dictionary<string, YdbValue> GetReportParameters(Report report) =>
         new()
         {
-            [IdColumnName] = YdbValue.MakeUtf8(report.Id),
-            [TitleColumnName] = YdbValue.MakeUtf8(report.Title),
-            [SpeakerNameColumnName] = YdbValue.MakeUtf8(report.Speaker.Name),
-            [SpeakerSurnameColumnName] = YdbValue.MakeUtf8(report.Speaker.Surname),
-            [ScheduledStartDateColumnName] = YdbValue.MakeDatetime(report.ScheduledStartDate),
-            [ScheduledEndDateColumnName] = YdbValue.MakeDatetime(report.ScheduledEndDate),
-            [ActualStartDateColumnName] = YdbValue.MakeOptionalDatetime(report.ActualStartDate),
-            [ActualEndDateColumnName] = YdbValue.MakeOptionalDatetime(report.ActualEndDate),
-            [StatusColumnName] = YdbValue.MakeUtf8(MapReportStatusToString(report.Status))
+            [$"${IdColumnName}"] = YdbValue.MakeUtf8(report.Id),
+            [$"${TitleColumnName}"] = YdbValue.MakeUtf8(report.Title),
+            [$"${SpeakerNameColumnName}"] = YdbValue.MakeUtf8(report.Speaker.Name),
+            [$"${SpeakerSurnameColumnName}"] = YdbValue.MakeUtf8(report.Speaker.Surname),
+            [$"${ScheduledStartDateColumnName}"] = YdbValue.MakeDatetime(report.ScheduledStartDate),
+            [$"${ScheduledEndDateColumnName}"] = YdbValue.MakeDatetime(report.ScheduledEndDate),
+            [$"${ActualStartDateColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualStartDate),
+            [$"${ActualEndDateColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualEndDate),
+            [$"${StatusColumnName}"] = YdbValue.MakeUtf8(MapReportStatusToString(report.Status))
         };
 
     private static Report GetReportFromReader(YdbDataReader reader)

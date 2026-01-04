@@ -115,7 +115,7 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
             [$"${IdColumnName}"] = YdbValue.MakeUtf8(question.Id),
             [$"${ReportIdColumnName}"] = YdbValue.MakeUtf8(question.ReportId),
             [$"${ThemeColumnName}"] = YdbValue.MakeUtf8(question.Theme),
-            [$"${TextColumnName}"] = YdbValue.MakeUtf8(question.Theme),
+            [$"${TextColumnName}"] = YdbValue.MakeUtf8(question.Text),
             [$"${CreatedAtColumnName}"] = YdbValue.MakeDatetime(question.CreatedAt),
             [$"${LikesCountColumnName}"] = YdbValue.MakeInt32(question.LikesCount)
         };
