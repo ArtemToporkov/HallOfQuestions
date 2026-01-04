@@ -55,7 +55,6 @@
     opacity: var(--translucent-percent);
     font-size: var(--font-size-text-small);
     font-weight: var(--font-weight-light);
-    transition: opacity 0.2s ease;
 }
 
 .reports-page__status-choice-radio {

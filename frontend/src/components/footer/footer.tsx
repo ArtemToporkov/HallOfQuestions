@@ -14,7 +14,7 @@ export function Footer(): ReactElement {
                 latest backend replica: {backendReplicaId}
             </span>
             <span className="footer__text">
-                frontend {import.meta.env.FRONTEND_VERSION ?? `v?.?.?`}
+                frontend version: {import.meta.env.FRONTEND_VERSION}
             </span>
         </footer>
     )

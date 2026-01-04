@@ -3,7 +3,7 @@ import { execSync } from 'node:child_process';
 import react from '@vitejs/plugin-react'
 import packageJson from './package.json';
 
-let version = `v${packageJson.version}`;
+let version = `${packageJson.version}`;
 try {
     const commitHash = execSync('git rev-parse HEAD').toString().trim();
     version = `${version} (commit hash: ${commitHash})`;

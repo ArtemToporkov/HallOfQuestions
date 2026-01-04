@@ -36,23 +36,24 @@ function showProblemToast(problem: ProblemDetails) {
 
 const replicaIdHeader = 'x-replica-id';
 
-const setReplicaIdOrErrorMessage = (id: string | string[] | undefined)=> {
+const setReplicaIdOrFailInfo = (id: string | string[] | undefined)=> {
     if (id && typeof id === 'string') {
         setReplicaId(id);
     } else {
-        setReplicaId(`missing header "${replicaIdHeader}" in server response`);
+        setReplicaId(`failed to determine`);
+        console.error(`Failed to get replica id from server response header "${replicaIdHeader}"`)
     }
 }
 
 api.interceptors.response.use(
     response => {
         const replicaId = response.headers[replicaIdHeader];
-        setReplicaIdOrErrorMessage(replicaId);
+        setReplicaIdOrFailInfo(replicaId);
         return response;
     },
     (error: AxiosError<ProblemDetails>) => {
         const replicaId = error.response?.headers[replicaIdHeader];
-        setReplicaIdOrErrorMessage(replicaId);
+        setReplicaIdOrFailInfo(replicaId);
         const problem = error.response?.data;
         if (!problem) {
             toast.error('Network error or server is unavailable');
