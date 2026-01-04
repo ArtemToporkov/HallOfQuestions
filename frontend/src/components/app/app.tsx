@@ -8,7 +8,13 @@ import { ReportsPage } from '../../pages/reports-page/reports-page.tsx';
 import { ReportPage } from '../../pages/report-page/report-page.tsx';
 import { MainPage } from '../../pages/main-page/main-page.tsx';
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            retry: false
+        },
+    },
+});
 
 export function App(): ReactElement {
   return (
