@@ -149,16 +149,25 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerNameColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerSurnameColumnName))
         );
+        
         return Report.FromState(
             reader.GetFieldValue<string>(reader.GetOrdinal(IdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TitleColumnName)),
             speaker,
             reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateColumnName)),
             reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateColumnName)),
-            reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualStartDateColumnName)),
-            reader.GetFieldValue<DateTime?>(reader.GetOrdinal(ActualEndDateColumnName)),
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualStartDateColumnName),
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualEndDateColumnName),
             MapStringToReportStatus(reader.GetFieldValue<string>(reader.GetOrdinal(StatusColumnName))),
             isValidated: true);
+    }
+
+    private static T? GetNullableFieldValueFromReader<T>(YdbDataReader reader, string columnName) where T : struct
+    {
+        var ordinal = reader.GetOrdinal(columnName);
+        return reader.IsDBNull(ordinal) 
+            ? null 
+            : reader.GetFieldValue<T>(ordinal);
     }
 
     private static string MapReportStatusToString(ReportStatus reportStatus) => reportStatus switch
