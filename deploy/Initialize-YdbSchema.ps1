@@ -32,7 +32,7 @@ if (-not $containerExists) {
         --folder-id $FOLDER_ID
 }
 
-Write-Host "Deploying initializer serverless container revision..."
+Write-Host "Deploying serverless initializer container revision..."
 yc serverless container revision deploy `
     --container-name $INITIALIZER_CONTAINER_NAME `
     --image $BACKEND_IMAGE `
@@ -45,7 +45,7 @@ yc serverless container revision deploy `
     --args $ASPNET_BACKEND_DLL_NAME `
     --args $ASPNET_MAP_INIT_YDB_ENDPOINT_ONLY_FLAG
        
-Write-Host "Allowing unauthenticated container invokes..." -ForegroundColor Yellow
+Write-Host "Allowing unauthenticated serverless container invokes..." -ForegroundColor Yellow
 yc serverless container allow-unauthenticated-invoke `
     --name $INITIALIZER_CONTAINER_NAME `
     --folder-id $FOLDER_ID
@@ -64,4 +64,4 @@ if ($DropIfExist) {
 }
 Invoke-RestMethod -Uri "${uri}" -Method Post
 
-Write-Host "Done"
+Write-Host "Done" -ForegroundColor Green
