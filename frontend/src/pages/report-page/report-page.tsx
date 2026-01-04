@@ -14,6 +14,8 @@ import {
     startReport
 } from '../../api/api.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
+import { Button } from '../../components/button/button.tsx';
+import { Spinner } from '../../components/spinner/spinner.tsx';
 import type { ReportData } from '../../types/report-data.ts';
 import type { QuestionData } from '../../types/question-data.ts';
 
@@ -57,12 +59,12 @@ export function ReportPage(): ReactElement {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [, setIsModalOpen] = useState(false);
 
-    const { data: reports = [] } = useQuery({
+    const { data: reports = [], isLoading: isReportsLoading } = useQuery({
         queryKey: ['reports'],
         queryFn: getReports
     });
 
-    const { data: reportQuestions = [] } = useQuery({
+    const { data: reportQuestions = [], isLoading: isQuestionsLoading } = useQuery({
         queryKey: [`report/${id}`],
         queryFn: () => getQuestions(id as string)
     });
@@ -118,6 +120,18 @@ export function ReportPage(): ReactElement {
         });
     }
 
+    if (isReportsLoading) {
+        return (
+            <Layout>
+                <div className="report-page__container">
+                    <div className="report-page__loading">
+                        <Spinner width="20px" height="20px" />
+                    </div>
+                </div>
+            </Layout>
+        );
+    }
+
     if (!report) {
         return (
             <Layout>
@@ -135,19 +149,29 @@ export function ReportPage(): ReactElement {
                     report={report}
                     handleStartClick={() => startMutation.mutate()}
                     handleEndClick={() => endMutation.mutate()}
+                    isStartButtonLoading={startMutation.isPending}
+                    isEndButtonLoading={endMutation.isPending}
                 />
                 <ReportPageHeader
                     onAskClick={openModal}
                     status={report.status}
                 />
                 <div className="report-page__questions-list">
-                    {reportQuestions.map((q) => (
-                        <QuestionCard key={q.id} question={q} />
-                    ))}
-                    {reportQuestions.length === 0 && (
-                        <div className="report-page__questions-list-empty">
-                            <span>{getEmptyQuestionsMessage(report.status)}</span>
+                    {isQuestionsLoading ? (
+                        <div className="report-page__loading">
+                            <Spinner width="20px" height="20px" />
                         </div>
+                    ) : (
+                        <>
+                            {reportQuestions.map((q) => (
+                                <QuestionCard key={q.id} question={q} />
+                            ))}
+                            {reportQuestions.length === 0 && (
+                                <div className="report-page__questions-list-empty">
+                                    <span>{getEmptyQuestionsMessage(report.status)}</span>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>
@@ -162,7 +186,14 @@ export function ReportPage(): ReactElement {
 
                 <div className="report-page__ask-actions">
                     <button className="report-page__ask-close" type="button" onClick={closeModal}>Отмена</button>
-                    <button className="report-page__ask-send" type="submit" disabled={addQuestionMutation.isPending} form="askForm">Отправить</button>
+                    <Button
+                        className="report-page__ask-send"
+                        type="submit"
+                        form="askForm"
+                        isLoading={addQuestionMutation.isPending}
+                    >
+                        Отправить
+                    </Button>
                 </div>
             </dialog>
         </Layout>

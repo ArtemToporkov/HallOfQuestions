@@ -1,6 +1,7 @@
 ﻿import type { ReactElement } from 'react';
 import type { ReportData } from '../../types/report-data.ts';
 import { convertReportStatusToString } from '../../utils/utils.ts';
+import { Button } from '../button/button.tsx';
 
 import './report-details.css';
 import { ReportStatus } from '../../enums/report-status.ts';
@@ -9,9 +10,17 @@ type ReportDetailsProps = {
     report: ReportData;
     handleStartClick: () => void;
     handleEndClick: () => void;
+    isStartButtonLoading: boolean;
+    isEndButtonLoading: boolean;
 }
 
-export function ReportDetails({ report, handleStartClick, handleEndClick }: ReportDetailsProps): ReactElement {
+export function ReportDetails({
+    report,
+    handleStartClick,
+    handleEndClick,
+    isStartButtonLoading,
+    isEndButtonLoading
+}: ReportDetailsProps): ReactElement {
     const getTime = (isoDate: string) => {
         const date = new Date(isoDate);
         const hh = String(date.getHours()).padStart(2, '0');
@@ -53,14 +62,26 @@ export function ReportDetails({ report, handleStartClick, handleEndClick }: Repo
 
             <div className="report-details__info-row">
                 {report.status === ReportStatus.NotStarted && (
-                    <button className="report-page__header-action-button" onClick={handleStartClick}>
+                    <Button
+                        className="report-page__header-action-button"
+                        spinnerWidth="10px"
+                        spinnerHeight="10px"
+                        onClick={handleStartClick}
+                        isLoading={isStartButtonLoading}
+                    >
                         Начать доклад
-                    </button>
+                    </Button>
                 )}
                 {report.status === ReportStatus.Started && (
-                    <button className="report-page__header-action-button" onClick={handleEndClick}>
+                    <Button
+                        className="report-page__header-action-button"
+                        spinnerWidth="10px"
+                        spinnerHeight="10px"
+                        onClick={handleEndClick}
+                        isLoading={isEndButtonLoading}
+                    >
                         Завершить доклад
-                    </button>
+                    </Button>
                 )}
             </div>
         </div>

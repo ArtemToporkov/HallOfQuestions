@@ -4,6 +4,7 @@ import { useState, type ReactElement } from 'react';
 
 import { likeQuestion, unlikeQuestion } from '../../api/api.ts';
 import { isQuestionLiked, toggleQuestionLikeInStorage } from '../../utils/utils.ts';
+import { Spinner } from '../spinner/spinner.tsx';
 import type { QuestionData } from '../../types/question-data.ts';
 
 import './question-card.css';
@@ -47,17 +48,29 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
                 <span className="question-card__question-text">{question.text}</span>
             </div>
             <div className="question-card__likes">
-                <button
-                    className={classNames(
-                        'question-card__like-button',
-                        { 'question-card__like-button-liked': isLiked }
-                    )}
-                    type="button"
-                    aria-label={isLiked ? "unlike" : "like"}
-                    onClick={() => toggleLikeMutation.mutate()}
-                    disabled={toggleLikeMutation.isPending}
-                />
-                <span className="question-card__likes-count">{question.likesCount}</span>
+                <div className={classNames(
+                    'question-card__likes-content',
+                    { 'question-card__likes-content--loading': toggleLikeMutation.isPending }
+                )}>
+                    <button
+                        className={classNames(
+                            'question-card__like-button',
+                            { 'question-card__like-button-liked': isLiked }
+                        )}
+                        type="button"
+                        aria-label={isLiked ? "unlike" : "like"}
+                        onClick={() => toggleLikeMutation.mutate()}
+                        disabled={toggleLikeMutation.isPending}
+                    >
+                    </button>
+                    <span className="question-card__likes-count">{question.likesCount}</span>
+                </div>
+                <div className={classNames(
+                    'question-card__likes-spinner',
+                    { 'question-card__likes-spinner--loading': toggleLikeMutation.isPending }
+                )}>
+                    <Spinner width="14px" height="14px" />
+                </div>
             </div>
         </div>
     );

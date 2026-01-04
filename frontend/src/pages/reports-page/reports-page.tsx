@@ -1,13 +1,15 @@
 ﻿import { type ReactElement, useState, useRef, type FormEvent } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Layout } from '../../components/layout/layout.tsx';
-import type { ReportData } from '../../types/report-data.ts';
 import { ReportInfo } from '../../components/report-info/report-info.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
+import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
+import { Button } from '../../components/button/button.tsx';
+import { Spinner } from '../../components/spinner/spinner.tsx';
+import type { ReportData } from '../../types/report-data.ts';
 
 import './reports-page.css';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
 
 function ReportsPageHeader({ handleCreateClick }: { handleCreateClick: () => void }): ReactElement {
     return (
@@ -71,7 +73,19 @@ function StatusChoice({ checkedConditionCallback, handleChange }: {
     )
 }
 
-function ReportsList({ reports }: { reports: ReportData[] }) {
+function ReportsList({ reports, isLoading }: { reports: ReportData[], isLoading: boolean }) {
+    if (reports.length === 0) {
+        if (isLoading) {
+            return (
+                <div className="reports-page__reports-list-loading">
+                    <Spinner width="20px" height="20px" />
+                </div>
+            )
+        } else {
+            return <span className="reports-page__reports-list-empty">Докладов не найдено</span>;
+        }
+    }
+
     return (
         <div className="reports-page__reports-list">
             {reports.map((r) => <ReportInfo key={r.id} report={r} />)}
@@ -85,7 +99,7 @@ export function ReportsPage(): ReactElement {
     const dialogRef = useRef<HTMLDialogElement>(null);
     const queryClient = useQueryClient();
 
-    const { data: reports = [] } = useQuery({
+    const { data: reports = [], isLoading } = useQuery({
         queryKey: ['reports'],
         queryFn: getReports
     });
@@ -139,11 +153,7 @@ export function ReportsPage(): ReactElement {
                     handleChange={(status) => setChosenStatus(status)}
                 />
 
-                {
-                    reportsByStatus.length !== 0
-                        ? <ReportsList reports={reportsByStatus}/>
-                        : <span className="reports-page__reports-list-empty">Докладов не найдено</span>
-                }
+                <ReportsList reports={reportsByStatus} isLoading={isLoading} />
             </div>
 
             <dialog ref={dialogRef} className="reports-page__create-modal">
@@ -174,7 +184,14 @@ export function ReportsPage(): ReactElement {
 
                 <div className="reports-page__create-actions">
                     <button className="reports-page__create-close" type="button" onClick={closeModal}>Отмена</button>
-                    <button className="reports-page__create-send" disabled={createReportMutation.isPending} type="submit" form="createForm">Создать</button>
+                    <Button
+                        className="reports-page__create-send"
+                        type="submit"
+                        form="createForm"
+                        isLoading={createReportMutation.isPending}
+                    >
+                        Создать
+                    </Button>
                 </div>
             </dialog>
         </Layout>
