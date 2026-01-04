@@ -2,11 +2,12 @@
 
 $FOLDER_ID = "b1g4gkkorau936jmpgi4"
 $REGISTRY_ID = "crp2ot8sddcki8cn0q9h"
+$SERVICE_ACCOUNT_ID = "ajeevkq231jhcfteppn5"
 $IMAGE_NAME = "hall-of-questions-backend"
 $IMAGE_TAG = "latest"
 $CONTAINER_NAME = "hall-of-questions-backend"
-$SERVICE_ACCOUNT_ID = "ajeevkq231jhcfteppn5"
-$YDB_ASPNET_CONNECTION_STRING_ENV_VARIABLE = "ConnectionStrings__Ydb"
+
+$ASPNET_YDB_CONNECTION_STRING_ENV_VARIABLE = "ConnectionStrings__Ydb"
 $YDB_CONNECTION_STRING = "Host=ydb.serverless.yandexcloud.net;Port=2135;Database=/ru-central1/b1galbfevin8h0bc0nht/etnouu3n4m119s1r2ajt"
 
 Write-Host "Building Docker image..."
@@ -39,6 +40,6 @@ yc serverless container revision deploy `
     --execution-timeout 30s `
     --service-account-id $SERVICE_ACCOUNT_ID `
     --folder-id $FOLDER_ID `
-    --environment "${YDB_ASPNET_CONNECTION_STRING_ENV_VARIABLE}=${YDB_CONNECTION_STRING}"
+    --environment "${ASPNET_YDB_CONNECTION_STRING_ENV_VARIABLE}=${YDB_CONNECTION_STRING}"
 
 Write-Host "Done" -ForegroundColor Green
