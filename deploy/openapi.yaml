@@ -30,8 +30,8 @@ paths:
             type: string
       x-yc-apigateway-integration:
         type: serverless_containers
-        container_id: ${BACKEND_SERVERLESS_CONTAINER_ID}
-        service_account_id: ${SERVICE_ACCOUNT_ID}
+        container_id: ${BACKEND_YANDEX_CLOUD_SERVERLESS_CONTAINER_ID}
+        service_account_id: ${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}
       responses:
         '200':
           description: OK
@@ -74,9 +74,9 @@ paths:
             type: string
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: ${FRONTEND_OBJECT_STORAGE_BUCKET_NAME}
+        bucket: ${FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME}
         object: 'assets/{file}'
-        service_account_id: ${SERVICE_ACCOUNT_ID}
+        service_account_id: ${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}
       responses:
         default:
           description: See response codes in Yandex Object Storage API documentation
@@ -91,9 +91,9 @@ paths:
             type: string
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: ${FRONTEND_OBJECT_STORAGE_BUCKET_NAME}
+        bucket: ${FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME}
         object: 'index.html'
-        service_account_id: ${SERVICE_ACCOUNT_ID}
+        service_account_id: ${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}
       responses:
         default:
           description: See response codes in Yandex Object Storage API documentation
@@ -102,9 +102,9 @@ paths:
     get:
       x-yc-apigateway-integration:
         type: object_storage
-        bucket: ${FRONTEND_OBJECT_STORAGE_BUCKET_NAME}
+        bucket: ${FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME}
         object: 'index.html'
-        service_account_id: ${SERVICE_ACCOUNT_ID}
+        service_account_id: ${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}
       responses:
         default:
           description: See response codes in Yandex Object Storage API documentation

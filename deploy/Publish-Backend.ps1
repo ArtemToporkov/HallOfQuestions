@@ -1,8 +1,9 @@
 ﻿$ErrorActionPreference = "Stop"
 
-$FOLDER_ID = "b1g4gkkorau936jmpgi4"
-$REGISTRY_ID = "crp2ot8sddcki8cn0q9h"
-$SERVICE_ACCOUNT_ID = "ajeevkq231jhcfteppn5"
+$YANDEX_CLOUD_FOLDER_ID = "b1g4gkkorau936jmpgi4"
+$YANDEX_CLOUD_SERVICE_ACCOUNT_ID = "ajeevkq231jhcfteppn5"
+$YANDEX_CONTAINER_REGISTRY_ID = "crp2ot8sddcki8cn0q9h"
+
 $IMAGE_NAME = "hall-of-questions-backend"
 $IMAGE_TAG = "latest"
 $CONTAINER_NAME = "hall-of-questions-backend"
@@ -12,34 +13,34 @@ $YDB_CONNECTION_STRING = "Host=ydb.serverless.yandexcloud.net;Port=2135;Database
 
 Write-Host "Building Docker image..."
 docker build `
-    -t "cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}" `
+    -t "cr.yandex/${YANDEX_CONTAINER_REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}" `
     -f ..\backend\Dockerfile ..\backend
 
 Write-Host "Pushing Docker image..."
-docker push "cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}"
+docker push "cr.yandex/${YANDEX_CONTAINER_REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}"
 
 Write-Host "Creating backend serverless container if doesn't exist..."
-$containerExists = yc serverless container get `
-                        --name $CONTAINER_NAME `
-                        --folder-id $FOLDER_ID `
-                        --format json `
-                        2>$null
+$containerExists = yc serverless container list `
+    --folder-id $YANDEX_CLOUD_FOLDER_ID `
+    --format json `
+    | ConvertFrom-Json `
+    | Where-Object { $_.name -eq $CONTAINER_NAME }
 if (-not $containerExists) {
     yc serverless container create `
         --name $CONTAINER_NAME `
-        --folder-id $FOLDER_ID
+        --folder-id $YANDEX_CLOUD_FOLDER_ID
 }
 
 Write-Host "Deploying serverless container revision..."
 yc serverless container revision deploy `
     --container-name $CONTAINER_NAME `
-    --image "cr.yandex/${REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}" `
+    --image "cr.yandex/${YANDEX_CONTAINER_REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}" `
     --cores 1 `
     --memory 1024MB `
     --concurrency 4 `
     --execution-timeout 30s `
-    --service-account-id $SERVICE_ACCOUNT_ID `
-    --folder-id $FOLDER_ID `
+    --service-account-id $YANDEX_CLOUD_SERVICE_ACCOUNT_ID `
+    --folder-id $YANDEX_CLOUD_FOLDER_ID `
     --environment "${ASPNET_YDB_CONNECTION_STRING_ENV_VARIABLE}=${YDB_CONNECTION_STRING}"
 
 Write-Host "Done" -ForegroundColor Green
