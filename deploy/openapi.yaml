@@ -1,0 +1,110 @@
+openapi: 3.0.0
+info:
+  title: Hall of Questions API
+  version: 1.0.0
+
+components:
+  schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+      required:
+        - title
+        - status
+        - detail
+
+paths:
+  /api/{any+}:
+    x-yc-apigateway-any-method:
+      parameters:
+        - name: any
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: serverless_containers
+        container_id: ${BACKEND_SERVERLESS_CONTAINER_ID}
+        service_account_id: ${SERVICE_ACCOUNT_ID}
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+
+  /assets/{file+}:
+    get:
+      parameters:
+        - name: file
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${FRONTEND_BUCKET_NAME}
+        object: 'assets/{file}'
+        service_account_id: ${SERVICE_ACCOUNT_ID}
+      responses:
+        default:
+          description: See response codes in Yandex Object Storage API documentation
+        
+  /{any+}:
+    get:
+      parameters:
+        - name: any
+          in: path
+          required: true
+          schema:
+            type: string
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${FRONTEND_BUCKET_NAME}
+        object: 'index.html'
+        service_account_id: ${SERVICE_ACCOUNT_ID}
+      responses:
+        default:
+          description: See response codes in Yandex Object Storage API documentation
+        
+  /:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${FRONTEND_BUCKET_NAME}
+        object: 'index.html'
+        service_account_id: ${SERVICE_ACCOUNT_ID}
+      responses:
+        default:
+          description: See response codes in Yandex Object Storage API documentation
