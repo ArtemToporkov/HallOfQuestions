@@ -9,7 +9,6 @@ public class YdbSchemaInitializer(YdbDataSource ydbDataSource, ILogger<YdbSchema
         logger.LogInformation("YDB schema initialization started");
         if (dropIfExist)
             logger.LogWarning("Tables will be dropped if they exist");
-        var targetTables = new[] { "reports", "questions" };
         try
         {
             await using var command = ydbDataSource.CreateCommand();
@@ -24,23 +23,7 @@ public class YdbSchemaInitializer(YdbDataSource ydbDataSource, ILogger<YdbSchema
                 logger.LogWarning("Tables dropped");
             }
             else
-            {
-                command.CommandText = $"""
-                                       SELECT COUNT(*) 
-                                       FROM `.sys/children` 
-                                       WHERE Name IN ('{string.Join("', '", targetTables)}')
-                                       """;
-                var result = await command.ExecuteScalarAsync(cancellationToken);
-                var existingCount = Convert.ToInt32(result);
-                if (existingCount == targetTables.Length)
-                {
-                    logger.LogInformation("Tables 'reports' and 'questions' already exist. Skipping creation");
-                    return;
-                }
-                if (existingCount > 0)
-                    logger.LogInformation("Some tables exist, but not all. Missing ones will be created");
-            }
-            logger.LogInformation("Creating tables...");
+            logger.LogInformation("Creating tables if they don't exist...");
             command.CommandText = """
                                   CREATE TABLE IF NOT EXISTS reports (
                                       id Utf8 NOT NULL,
