@@ -114,13 +114,12 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
     {
         const string sql = $"""
                             UPDATE reports
-                            SET {IdColumnName} = ${IdColumnName},
-                                {TitleColumnName} = ${TitleColumnName},
+                            SET {TitleColumnName} = ${TitleColumnName},
                                 {SpeakerNameColumnName} = ${SpeakerNameColumnName},
                                 {SpeakerSurnameColumnName} = ${SpeakerSurnameColumnName},
                                 {ScheduledStartDateColumnName} = ${ScheduledStartDateColumnName},
                                 {ScheduledEndDateColumnName} = ${ScheduledEndDateColumnName},
-                                {ActualStartDateColumnName} = ${ActualEndDateColumnName},
+                                {ActualStartDateColumnName} = ${ActualStartDateColumnName},
                                 {ActualEndDateColumnName} = ${ActualEndDateColumnName},
                                 {StatusColumnName} = ${StatusColumnName}
                             WHERE {IdColumnName} = ${IdColumnName}

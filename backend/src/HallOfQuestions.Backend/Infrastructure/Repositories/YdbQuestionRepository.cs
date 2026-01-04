@@ -97,8 +97,7 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
     {
         const string sql = $"""
                             UPDATE questions
-                            SET {IdColumnName} = ${IdColumnName},
-                                {ReportIdColumnName} = ${ReportIdColumnName},
+                            SET {ReportIdColumnName} = ${ReportIdColumnName},
                                 {ThemeColumnName} = ${ThemeColumnName},
                                 {TextColumnName} = ${TextColumnName},
                                 {CreatedAtColumnName} = ${CreatedAtColumnName},
