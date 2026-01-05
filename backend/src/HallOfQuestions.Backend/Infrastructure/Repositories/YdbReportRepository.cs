@@ -148,15 +148,28 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerNameColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(SpeakerSurnameColumnName))
         );
+
+        var unspecifiedScheduledStartDate =
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateUtcColumnName));
+        var unspecifiedScheduledEndDate =
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateUtcColumnName));
+        var unspecifiedActualStartDate =
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualStartDateUtcColumnName);
+        var unspecifiedActualEndDate =
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualEndDateUtcColumnName);
         
         return Report.FromState(
             reader.GetFieldValue<string>(reader.GetOrdinal(IdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TitleColumnName)),
             speaker,
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateUtcColumnName)),
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateUtcColumnName)),
-            GetNullableFieldValueFromReader<DateTime>(reader, ActualStartDateUtcColumnName),
-            GetNullableFieldValueFromReader<DateTime>(reader, ActualEndDateUtcColumnName),
+            DateTime.SpecifyKind(unspecifiedScheduledStartDate, DateTimeKind.Utc),
+            DateTime.SpecifyKind(unspecifiedScheduledEndDate, DateTimeKind.Utc),
+            unspecifiedActualStartDate.HasValue 
+                ? DateTime.SpecifyKind(unspecifiedActualStartDate.Value, DateTimeKind.Utc) 
+                : null,
+            unspecifiedActualEndDate.HasValue 
+                ? DateTime.SpecifyKind(unspecifiedActualEndDate.Value, DateTimeKind.Utc) 
+                : null,
             MapStringToReportStatus(reader.GetFieldValue<string>(reader.GetOrdinal(StatusColumnName))),
             isValidated: true);
     }
