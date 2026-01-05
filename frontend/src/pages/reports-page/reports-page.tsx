@@ -1,6 +1,6 @@
-﻿import classNames from 'classnames';
-import { type ReactElement, useState, useRef, type FormEvent } from 'react';
+﻿import { type ReactElement, useState, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import classNames from 'classnames';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportCard } from '../../components/report-card/report-card.tsx';
@@ -103,8 +103,7 @@ function ReportsList({ reports, isLoading }: { reports: ReportData[], isLoading:
 
 export function ReportsPage(): ReactElement {
     const [chosenStatus, setChosenStatus] = useState<ReportStatus>(ReportStatus.Started);
-    const [, setIsModalOpen] = useState(false);
-    const dialogRef = useRef<HTMLDialogElement>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const queryClient = useQueryClient();
 
     const { data: reports = [], isLoading } = useQuery({
@@ -118,19 +117,9 @@ export function ReportsPage(): ReactElement {
             queryClient.setQueryData(['reports'], (oldReports: ReportData[] | undefined) => {
                 return oldReports ? [...oldReports, newReport] : [newReport];
             });
-            closeModal();
+            setIsModalOpen(false);
         }
     });
-
-    const openModal = () => {
-        setIsModalOpen(true);
-        dialogRef.current?.showModal();
-    }
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        dialogRef.current?.close();
-    }
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -154,7 +143,7 @@ export function ReportsPage(): ReactElement {
     return (
         <Layout>
             <div className="reports-page__container">
-                <ReportsPageHeader handleCreateClick={openModal} />
+                <ReportsPageHeader handleCreateClick={() => setIsModalOpen(true)} />
 
                 <StatusChoice
                     checkedConditionCallback={(status) => status === chosenStatus}
@@ -165,9 +154,9 @@ export function ReportsPage(): ReactElement {
             </div>
 
             <Modal
-                ref={dialogRef}
+                isOpen={isModalOpen}
                 title="Создать доклад"
-                onClose={closeModal}
+                onClose={() => setIsModalOpen(false)}
                 onSubmit={handleSubmit}
                 submitButtonText="Создать"
                 isSubmitLoading={createReportMutation.isPending}

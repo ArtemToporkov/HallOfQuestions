@@ -71,7 +71,6 @@
 }
 
 .report-page__questions-list--empty {
-    width: 100%;
     font-weight: bold;
     padding: 50px;
     box-sizing: border-box;

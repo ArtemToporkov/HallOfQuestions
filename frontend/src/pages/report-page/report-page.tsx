@@ -1,24 +1,24 @@
-import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useRef, useState, type FormEvent, type ReactElement } from 'react';
+import classNames from 'classnames';
+import { type FormEvent, type ReactElement, useState } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportInfo } from '../../components/report-info/report-info.tsx';
 import { QuestionCard } from '../../components/question-card/question-card.tsx';
+import {
+    addQuestion,
+    type AddQuestionRequest,
+    endReport,
+    getQuestions,
+    getReports,
+    startReport
+} from '../../api/api.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
 import { Spinner } from '../../components/spinner/spinner.tsx';
 import { Modal } from '../../components/modal/modal.tsx';
 import { Input } from '../../components/input/input.tsx';
 import { TextArea } from '../../components/textarea/textarea.tsx';
-import {
-    addQuestion,
-    endReport,
-    getQuestions,
-    getReports,
-    startReport,
-    type AddQuestionRequest
-} from '../../api/api.ts';
 import type { ReportData } from '../../types/report-data.ts';
 import type { QuestionData } from '../../types/question-data.ts';
 
@@ -81,8 +81,7 @@ function ReportLoadingContainer(): ReactElement {
 export function ReportPage(): ReactElement {
     const { id } = useParams<{ id: string }>();
     const queryClient = useQueryClient();
-    const dialogRef = useRef<HTMLDialogElement>(null);
-    const [, setIsModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     const { data: reports = [], isLoading: isReportsLoading } = useQuery({
         queryKey: ['reports'],
@@ -122,19 +121,9 @@ export function ReportPage(): ReactElement {
             queryClient.setQueryData([`report/${id}`], (oldQuestions: QuestionData[] | undefined) => {
                 return oldQuestions ? [...oldQuestions, newQuestion] : [newQuestion];
             });
-            closeModal();
+            setIsModalOpen(false);
         }
     });
-
-    const openModal = () => {
-        setIsModalOpen(true);
-        dialogRef.current?.showModal();
-    }
-
-    const closeModal = () => {
-        setIsModalOpen(false);
-        dialogRef.current?.close();
-    }
 
     const handleQuestionSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -166,7 +155,7 @@ export function ReportPage(): ReactElement {
                     isEndButtonLoading={endMutation.isPending}
                 />
                 <ReportPageHeader
-                    onAskClick={openModal}
+                    onAskClick={() => setIsModalOpen(true)}
                     status={report.status}
                 />
                 <div className={classNames(
@@ -193,9 +182,9 @@ export function ReportPage(): ReactElement {
             </div>
 
             <Modal
-                ref={dialogRef}
+                isOpen={isModalOpen}
                 title="Задать вопрос"
-                onClose={closeModal}
+                onClose={() => setIsModalOpen(false)}
                 onSubmit={handleQuestionSubmit}
                 submitButtonText="Отправить"
                 isSubmitLoading={addQuestionMutation.isPending}
