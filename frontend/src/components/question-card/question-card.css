@@ -58,17 +58,26 @@
 }
 
 .question-card__like-button {
-    width: 30px;
-    height: 30px;
-    border: 2px solid var(--text-color);
-    background: transparent;
+    width: 32px;
+    height: 32px;
+    background-color: var(--text-color);
     cursor: pointer;
-    border-radius: 20px;
+    border: none;
+    outline: none;
+    -webkit-mask-image: url('../../assets/heart-outline.svg');
+    mask-image: url('../../assets/heart-outline.svg');
+    -webkit-mask-repeat: no-repeat;
+    mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    mask-position: center;
+    -webkit-mask-size: contain;
+    mask-size: contain;
 }
 
 .question-card__like-button--active {
-    border: none;
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    -webkit-mask-image: url('../../assets/heart-filled.svg');
+    mask-image: url('../../assets/heart-filled.svg');
 }
 
 .question-card__likes-count {
