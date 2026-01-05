@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using HallOfQuestions.Backend.Validation;
 
 namespace HallOfQuestions.Backend.Requests;
 
@@ -10,11 +11,11 @@ public class AddReportRequest
     public required string ReportTitle { get; init; }
     
     [Required]
-    [DataType(DataType.DateTime)]
+    [UtcDateTime]
     public required DateTime ReportStartDateUtc { get; init; }
     
     [Required]
-    [DataType(DataType.DateTime)]
+    [UtcDateTime]
     public required DateTime ReportEndDateUtc { get; init; }
     
     [Required]
