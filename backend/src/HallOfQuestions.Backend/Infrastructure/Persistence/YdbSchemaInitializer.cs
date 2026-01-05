@@ -30,10 +30,10 @@ public class YdbSchemaInitializer(YdbDataSource ydbDataSource, ILogger<YdbSchema
                                       title Utf8 NOT NULL,
                                       speaker_name Utf8 NOT NULL,
                                       speaker_surname Utf8 NOT NULL,
-                                      scheduled_start_date Datetime NOT NULL,
-                                      scheduled_end_date Datetime NOT NULL,
-                                      actual_start_date Datetime,
-                                      actual_end_date Datetime,
+                                      scheduled_start_date_utc Datetime NOT NULL,
+                                      scheduled_end_date_utc Datetime NOT NULL,
+                                      actual_start_date_utc Datetime,
+                                      actual_end_date_utc Datetime,
                                       status Utf8 NOT NULL,
                                       PRIMARY KEY (id)
                                   );
@@ -43,7 +43,6 @@ public class YdbSchemaInitializer(YdbDataSource ydbDataSource, ILogger<YdbSchema
                                       report_id Utf8 NOT NULL,
                                       theme Utf8 NOT NULL,
                                       text Utf8 NOT NULL,
-                                      created_at Datetime NOT NULL,
                                       likes_count Int32 NOT NULL,
                                       PRIMARY KEY (id),
                                       INDEX idx_questions_report_id GLOBAL ON (report_id)
