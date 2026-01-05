@@ -1,5 +1,6 @@
 ﻿import { type ReactElement, useState, useRef, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import classNames from 'classnames';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportCard } from '../../components/report-card/report-card.tsx';
@@ -75,21 +76,27 @@ function StatusChoice({ checkedConditionCallback, handleChange }: {
 }
 
 function ReportsList({ reports, isLoading }: { reports: ReportData[], isLoading: boolean }) {
-    if (reports.length === 0) {
-        if (isLoading) {
-            return (
-                <div className="reports-page__reports-list-loading">
-                    <Spinner width="20px" height="20px" />
-                </div>
-            )
-        } else {
-            return <span className="reports-page__reports-list-empty">Докладов не найдено</span>;
-        }
-    }
+    const isListEmpty = !isLoading && reports.length === 0;
 
     return (
-        <div className="reports-page__reports-list">
-            {reports.map((r) => <ReportCard key={r.id} report={r} />)}
+        <div className={classNames(
+            'reports-page__reports-list',
+            {
+                'reports-page__reports-list--loading': isLoading,
+                'reports-page__reports-list--empty': isListEmpty
+            }
+        )}>
+            {isLoading && (
+                <Spinner width="20px" height="20px" />
+            )}
+
+            {!isLoading && !isListEmpty && reports.map((r) => (
+                <ReportCard key={r.id} report={r} />
+            ))}
+
+            {isListEmpty && (
+                <span>Докладов не найдено</span>
+            )}
         </div>
     );
 }

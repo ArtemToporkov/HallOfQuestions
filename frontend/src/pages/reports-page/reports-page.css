@@ -70,7 +70,7 @@
     width: 100%;
 }
 
-.reports-page__reports-list-empty {
+.reports-page__reports-list--empty {
     font-weight: bold;
     padding: 50px;
     box-sizing: border-box;
@@ -82,7 +82,7 @@
     border-radius: var(--border-radius);
 }
 
-.reports-page__reports-list-loading {
+.reports-page__reports-list--loading {
     padding: 50px;
     box-sizing: border-box;
     display: flex;

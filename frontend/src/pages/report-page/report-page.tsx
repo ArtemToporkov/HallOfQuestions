@@ -1,6 +1,7 @@
-import { type FormEvent, type ReactElement, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import classNames from 'classnames';
+import { type FormEvent, type ReactElement, useRef, useState } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportInfo } from '../../components/report-info/report-info.tsx';
@@ -69,7 +70,7 @@ function ReportLoadingContainer(): ReactElement {
     return (
         <Layout>
             <div className="report-page__container">
-                <div className="report-page__spinner-container">
+                <div className="report-page__page-loader">
                     <Spinner width="20px" height="20px" />
                 </div>
             </div>
@@ -152,6 +153,8 @@ export function ReportPage(): ReactElement {
         return <ReportNotFoundPanel />
     }
 
+    const isListEmpty = !isQuestionsLoading && reportQuestions.length === 0;
+
     return (
         <Layout>
             <div className="report-page__container">
@@ -166,22 +169,25 @@ export function ReportPage(): ReactElement {
                     onAskClick={openModal}
                     status={report.status}
                 />
-                <div className="report-page__questions-list">
-                    {isQuestionsLoading ? (
-                        <div className="report-page__spinner-container">
-                            <Spinner width="20px" height="20px" />
-                        </div>
-                    ) : (
-                        <>
-                            {reportQuestions.map((q) => (
-                                <QuestionCard key={q.id} question={q} />
-                            ))}
-                            {reportQuestions.length === 0 && (
-                                <div className="report-page__questions-list-empty">
-                                    <span>{getEmptyQuestionsMessage(report.status)}</span>
-                                </div>
-                            )}
-                        </>
+                <div className={classNames(
+                    'report-page__questions-list',
+                    {
+                        'report-page__questions-list--loading': isQuestionsLoading,
+                        'report-page__questions-list--empty': isListEmpty
+                    }
+                )}>
+                    {isQuestionsLoading && (
+                        <Spinner width="20px" height="20px" />
+                    )}
+
+                    {!isQuestionsLoading && reportQuestions.length > 0 && (
+                        reportQuestions.map((q) => (
+                            <QuestionCard key={q.id} question={q} />
+                        ))
+                    )}
+
+                    {isListEmpty && (
+                        <span>{getEmptyQuestionsMessage(report.status)}</span>
                     )}
                 </div>
             </div>
