@@ -1,12 +1,12 @@
 ﻿import classNames from 'classnames';
-import type { ReactElement } from 'react';
 import { Link, generatePath } from 'react-router-dom';
+import type { ReactElement } from 'react';
 
 import { convertReportStatusToString, formatTimeWithOffset } from '../../utils/utils.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
+import { AppRoute } from '../../enums/app-route.ts';
 import type { ReportData } from '../../types/report-data.ts';
 import type { IsoString } from '../../types/iso-string.ts';
-import { AppRoute } from '../../enums/app-route.ts';
 
 import './report-card.css';
 

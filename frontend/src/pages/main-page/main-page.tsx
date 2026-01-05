@@ -1,5 +1,6 @@
 ﻿import { Link } from 'react-router-dom';
 import type { ReactElement } from 'react';
+
 import { AppRoute } from '../../enums/app-route.ts';
 import { Layout } from '../../components/layout/layout.tsx';
 

@@ -1,10 +1,11 @@
-import type { ReactElement } from 'react';
-import type { ReportData } from '../../types/report-data.ts';
 import { convertReportStatusToString } from '../../utils/utils.ts';
 import { Button } from '../button/button.tsx';
+import type { ReactElement } from 'react';
+import type { ReportData } from '../../types/report-data.ts';
+
+import { ReportStatus } from '../../enums/report-status.ts';
 
 import './report-info.css';
-import { ReportStatus } from '../../enums/report-status.ts';
 
 type ReportDetailsProps = {
     report: ReportData;
@@ -15,12 +16,12 @@ type ReportDetailsProps = {
 }
 
 export function ReportInfo({
-                               report,
-                               handleStartClick,
-                               handleEndClick,
-                               isStartButtonLoading,
-                               isEndButtonLoading
-                           }: ReportDetailsProps): ReactElement {
+    report,
+    handleStartClick,
+    handleEndClick,
+    isStartButtonLoading,
+    isEndButtonLoading
+}: ReportDetailsProps): ReactElement {
     const getTime = (isoDate: string) => {
         const date = new Date(isoDate);
         const hh = String(date.getHours()).padStart(2, '0');

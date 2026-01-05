@@ -1,11 +1,19 @@
-﻿import { type ReactElement, type ReactNode, forwardRef, type PropsWithChildren } from 'react';
-import './modal.css';
+﻿import {
+    forwardRef,
+    type ReactElement,
+    type ReactNode,
+    type PropsWithChildren,
+    type FormEvent
+} from 'react';
+
 import { Button } from '../button/button.tsx';
+
+import './modal.css';
 
 type ModalProps = PropsWithChildren<{
     title: string;
     onClose: () => void;
-    onSubmit?: (e: React.FormEvent<HTMLFormElement>) => void;
+    onSubmit?: (e: FormEvent<HTMLFormElement>) => void;
     submitButtonText?: string;
     isSubmitLoading?: boolean;
     formId?: string;

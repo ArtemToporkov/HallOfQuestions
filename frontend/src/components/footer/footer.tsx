@@ -1,7 +1,8 @@
 ﻿import { type ReactElement, useEffect, useState } from 'react';
 
-import './footer.css';
 import { getReplicaId, subscribeToReplicaId } from '../../services/backend-replica-store.ts';
+
+import './footer.css';
 
 export function Footer(): ReactElement {
     const [backendReplicaId, setBackendReplicaId] = useState(getReplicaId());

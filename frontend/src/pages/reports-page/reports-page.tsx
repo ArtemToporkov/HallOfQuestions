@@ -1,6 +1,6 @@
-﻿import { type ReactElement, useState, useRef, type FormEvent } from 'react';
+﻿import classNames from 'classnames';
+import { type ReactElement, useState, useRef, type FormEvent } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportCard } from '../../components/report-card/report-card.tsx';
