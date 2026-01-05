@@ -5,27 +5,34 @@ namespace HallOfQuestions.Backend.Domain.Entities;
 
 public class Report
 {
-    public string Id { get; }
-    public string Title { get; }
-    public Person Speaker { get; }
-    public DateTime ScheduledStartDate { get; }
-    public DateTime ScheduledEndDate { get; }
-    public DateTime? ActualStartDate { get; private set; }
-    public DateTime? ActualEndDate { get; private set; }
+    public string Id { get; private init; }
+    public string Title { get; private init; }
+    public Person Speaker { get; private init; }
+    public DateTime ScheduledStartDateUtc { get; private init; }
+    public DateTime ScheduledEndDateUtc { get; private init; }
+    public DateTime? ActualStartDateUtc { get; private set; }
+    public DateTime? ActualEndDateUtc { get; private set; }
     public ReportStatus Status { get; private set; }
 
-    public Report(string id, string title, Person speaker, DateTime scheduledStartDate, DateTime scheduledEndDate)
+    public static Report PlanNew(
+        string id,
+        string title,
+        Person speaker,
+        DateTime nowUtc,
+        DateTime scheduledStartDateUtc,
+        DateTime scheduledEndDateUtc)
     {
-        if (scheduledStartDate > scheduledEndDate)
-            throw new DomainException("Scheduled start date can't be later than scheduled end date");
+        ValidateUtcOrThrow(scheduledStartDateUtc);
+        ValidateUtcOrThrow(scheduledEndDateUtc);
+        ValidateUtcOrThrow(nowUtc);
         
-        Id = id;
-        Title = title;
-        Speaker = speaker;
-        ScheduledStartDate = scheduledStartDate;
-        ScheduledEndDate = scheduledEndDate;
-        ActualEndDate = null;
-        Status = ReportStatus.NotStarted;
+        if (scheduledStartDateUtc < nowUtc)
+            throw new DomainException("Report cannot be planned for a time earlier than the current UTC time");
+        if (scheduledStartDateUtc > scheduledEndDateUtc)
+            throw new DomainException("Scheduled start date cannot be later than scheduled end date");
+
+        return new Report(
+            id, title, speaker, scheduledStartDateUtc, scheduledEndDateUtc, null, null, ReportStatus.NotStarted);
     }
 
     public static Report FromState(
@@ -41,18 +48,35 @@ public class Report
     {
         if (!isValidated)
             throw new InvalidOperationException("State to initialize Report from should be validated");
-        var report = new Report(id, title, speaker, scheduledStartDate, scheduledEndDate)
-        {
-            ActualStartDate = actualStartDate,
-            ActualEndDate = actualEndDate,
-            Status = status
-        };
-        return report;
+        return new Report(
+            id, title, speaker, scheduledStartDate, scheduledEndDate, actualStartDate, actualEndDate, status);
+    }
+
+    private Report(
+        string id,
+        string title,
+        Person speaker,
+        DateTime scheduledStartDateUtc,
+        DateTime scheduledEndDateUtc,
+        DateTime? actualStartDateUtc,
+        DateTime? actualEndDateUtc,
+        ReportStatus status)
+    {
+        Id = id;
+        Title = title;
+        Speaker = speaker;
+        ScheduledStartDateUtc = scheduledStartDateUtc;
+        ScheduledEndDateUtc = scheduledEndDateUtc;
+        ActualStartDateUtc = actualStartDateUtc;
+        ActualEndDateUtc = actualEndDateUtc;
+        Status = status;
     }
     
-    public void Start(DateTime startDate)
+    public void Start(DateTime startDateUtc)
     {
-        ActualStartDate = startDate;
+        ValidateUtcOrThrow(startDateUtc);
+        
+        ActualStartDateUtc = startDateUtc;
         Status = Status switch
         {
             ReportStatus.Started => throw new DomainException("Report has already started"),
@@ -64,17 +88,25 @@ public class Report
 
     public void End(DateTime endDate)
     {
+        ValidateUtcOrThrow(endDate);
+        
         var newStatus = Status switch
         {
             ReportStatus.Started => ReportStatus.Ended,
             ReportStatus.Ended => throw new DomainException("Report has already ended"),
             ReportStatus.NotStarted => throw new DomainException("Report has not started"),
-            _ => throw new ArgumentException("Unexpected report status")
+            _ => throw new InvalidOperationException()
         };
-        if (endDate < ActualStartDate!.Value)
-            throw new DomainException("Report can't end earlier than it started");
+        if (endDate < ActualStartDateUtc!.Value)
+            throw new DomainException("Report cannot end earlier than it started");
 
         Status = newStatus;
-        ActualEndDate = endDate;
+        ActualEndDateUtc = endDate;
+    }
+
+    private static void ValidateUtcOrThrow(DateTime dateUtc)
+    {
+        if (dateUtc.Kind != DateTimeKind.Utc)
+            throw new DomainException("Date must be in UTC");
     }
 }

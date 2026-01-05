@@ -11,11 +11,11 @@ public class AddReportRequest
     
     [Required]
     [DataType(DataType.DateTime)]
-    public required DateTime ReportStartDate { get; init; }
+    public required DateTime ReportStartDateUtc { get; init; }
     
     [Required]
     [DataType(DataType.DateTime)]
-    public required DateTime ReportEndDate { get; init; }
+    public required DateTime ReportEndDateUtc { get; init; }
     
     [Required]
     public required PersonRequest Speaker { get; init; }

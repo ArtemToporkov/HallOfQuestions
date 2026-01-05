@@ -63,12 +63,13 @@ else
         [FromServices] IReportRepository repository) =>
     {
         var person = new Person(request.Speaker.Name, request.Speaker.Surname);
-        var report = new Report(
+        var report = Report.PlanNew(
             Guid.NewGuid().ToString(),
             request.ReportTitle,
             person,
-            request.ReportStartDate,
-            request.ReportEndDate);
+            DateTime.UtcNow,
+            request.ReportStartDateUtc,
+            request.ReportEndDateUtc);
         await repository.AddAsync(report);
         return Results.Created($"/api/reports/{report.Id}", report);
     });

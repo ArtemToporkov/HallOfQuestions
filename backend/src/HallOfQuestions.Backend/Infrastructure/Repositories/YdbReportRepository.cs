@@ -12,10 +12,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
     private const string TitleColumnName = "title";
     private const string SpeakerNameColumnName = "speaker_name";
     private const string SpeakerSurnameColumnName = "speaker_surname";
-    private const string ScheduledStartDateColumnName = "scheduled_start_date";
-    private const string ScheduledEndDateColumnName = "scheduled_end_date";
-    private const string ActualStartDateColumnName = "actual_start_date";
-    private const string ActualEndDateColumnName = "actual_end_date";
+    private const string ScheduledStartDateUtcColumnName = "scheduled_start_date_utc";
+    private const string ScheduledEndDateUtcColumnName = "scheduled_end_date_utc";
+    private const string ActualStartDateUtcColumnName = "actual_start_date_utc";
+    private const string ActualEndDateUtcColumnName = "actual_end_date_utc";
     private const string StatusColumnName = "status";
     
     private const string StartedColumnValue = "started";
@@ -30,10 +30,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {TitleColumnName},
                                 {SpeakerNameColumnName},
                                 {SpeakerSurnameColumnName},
-                                {ScheduledStartDateColumnName},
-                                {ScheduledEndDateColumnName},
-                                {ActualStartDateColumnName},
-                                {ActualEndDateColumnName},
+                                {ScheduledStartDateUtcColumnName},
+                                {ScheduledEndDateUtcColumnName},
+                                {ActualStartDateUtcColumnName},
+                                {ActualEndDateUtcColumnName},
                                 {StatusColumnName}
                             )
                             VAlUES (
@@ -41,10 +41,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 ${TitleColumnName},
                                 ${SpeakerNameColumnName},
                                 ${SpeakerSurnameColumnName},
-                                ${ScheduledStartDateColumnName},
-                                ${ScheduledEndDateColumnName},
-                                ${ActualStartDateColumnName},
-                                ${ActualEndDateColumnName},
+                                ${ScheduledStartDateUtcColumnName},
+                                ${ScheduledEndDateUtcColumnName},
+                                ${ActualStartDateUtcColumnName},
+                                ${ActualEndDateUtcColumnName},
                                 ${StatusColumnName}  
                             );
                             """;
@@ -60,10 +60,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {TitleColumnName},
                                 {SpeakerNameColumnName},
                                 {SpeakerSurnameColumnName},
-                                {ScheduledStartDateColumnName},
-                                {ScheduledEndDateColumnName},
-                                {ActualStartDateColumnName},
-                                {ActualEndDateColumnName},
+                                {ScheduledStartDateUtcColumnName},
+                                {ScheduledEndDateUtcColumnName},
+                                {ActualStartDateUtcColumnName},
+                                {ActualEndDateUtcColumnName},
                                 {StatusColumnName}
                             FROM reports
                             WHERE {IdColumnName} = ${IdColumnName};
@@ -90,10 +90,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                                 {TitleColumnName},
                                 {SpeakerNameColumnName},
                                 {SpeakerSurnameColumnName},
-                                {ScheduledStartDateColumnName},
-                                {ScheduledEndDateColumnName},
-                                {ActualStartDateColumnName},
-                                {ActualEndDateColumnName},
+                                {ScheduledStartDateUtcColumnName},
+                                {ScheduledEndDateUtcColumnName},
+                                {ActualStartDateUtcColumnName},
+                                {ActualEndDateUtcColumnName},
                                 {StatusColumnName}
                             FROM reports;
                             """;
@@ -117,10 +117,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
                             SET {TitleColumnName} = ${TitleColumnName},
                                 {SpeakerNameColumnName} = ${SpeakerNameColumnName},
                                 {SpeakerSurnameColumnName} = ${SpeakerSurnameColumnName},
-                                {ScheduledStartDateColumnName} = ${ScheduledStartDateColumnName},
-                                {ScheduledEndDateColumnName} = ${ScheduledEndDateColumnName},
-                                {ActualStartDateColumnName} = ${ActualStartDateColumnName},
-                                {ActualEndDateColumnName} = ${ActualEndDateColumnName},
+                                {ScheduledStartDateUtcColumnName} = ${ScheduledStartDateUtcColumnName},
+                                {ScheduledEndDateUtcColumnName} = ${ScheduledEndDateUtcColumnName},
+                                {ActualStartDateUtcColumnName} = ${ActualStartDateUtcColumnName},
+                                {ActualEndDateUtcColumnName} = ${ActualEndDateUtcColumnName},
                                 {StatusColumnName} = ${StatusColumnName}
                             WHERE {IdColumnName} = ${IdColumnName}
                             """;
@@ -135,10 +135,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             [$"${TitleColumnName}"] = YdbValue.MakeUtf8(report.Title),
             [$"${SpeakerNameColumnName}"] = YdbValue.MakeUtf8(report.Speaker.Name),
             [$"${SpeakerSurnameColumnName}"] = YdbValue.MakeUtf8(report.Speaker.Surname),
-            [$"${ScheduledStartDateColumnName}"] = YdbValue.MakeDatetime(report.ScheduledStartDate),
-            [$"${ScheduledEndDateColumnName}"] = YdbValue.MakeDatetime(report.ScheduledEndDate),
-            [$"${ActualStartDateColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualStartDate),
-            [$"${ActualEndDateColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualEndDate),
+            [$"${ScheduledStartDateUtcColumnName}"] = YdbValue.MakeDatetime(report.ScheduledStartDateUtc),
+            [$"${ScheduledEndDateUtcColumnName}"] = YdbValue.MakeDatetime(report.ScheduledEndDateUtc),
+            [$"${ActualStartDateUtcColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualStartDateUtc),
+            [$"${ActualEndDateUtcColumnName}"] = YdbValue.MakeOptionalDatetime(report.ActualEndDateUtc),
             [$"${StatusColumnName}"] = YdbValue.MakeUtf8(MapReportStatusToString(report.Status))
         };
 
@@ -153,10 +153,10 @@ public class YdbReportRepository(YdbDataSource ydbDataSource) : YdbBaseRepositor
             reader.GetFieldValue<string>(reader.GetOrdinal(IdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TitleColumnName)),
             speaker,
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateColumnName)),
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateColumnName)),
-            GetNullableFieldValueFromReader<DateTime>(reader, ActualStartDateColumnName),
-            GetNullableFieldValueFromReader<DateTime>(reader, ActualEndDateColumnName),
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledStartDateUtcColumnName)),
+            reader.GetFieldValue<DateTime>(reader.GetOrdinal(ScheduledEndDateUtcColumnName)),
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualStartDateUtcColumnName),
+            GetNullableFieldValueFromReader<DateTime>(reader, ActualEndDateUtcColumnName),
             MapStringToReportStatus(reader.GetFieldValue<string>(reader.GetOrdinal(StatusColumnName))),
             isValidated: true);
     }
