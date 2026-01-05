@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Layout } from '../../components/layout/layout.tsx';
-import { ReportDetails } from '../../components/report-details/report-details.tsx';
+import { ReportInfo } from '../../components/report-info/report-info.tsx';
 import { QuestionCard } from '../../components/question-card/question-card.tsx';
 import {
     addQuestion,
@@ -14,8 +14,10 @@ import {
     startReport
 } from '../../api/api.ts';
 import { ReportStatus } from '../../enums/report-status.ts';
-import { Button } from '../../components/button/button.tsx';
 import { Spinner } from '../../components/spinner/spinner.tsx';
+import { Modal } from '../../components/modal/modal.tsx';
+import { Input } from '../../components/input/input.tsx';
+import { TextArea } from '../../components/textarea/textarea.tsx';
 import type { ReportData } from '../../types/report-data.ts';
 import type { QuestionData } from '../../types/question-data.ts';
 
@@ -50,6 +52,28 @@ function ReportPageHeader({ onAskClick, status }: {
                 </div>
             }
         </div>
+    );
+}
+
+function ReportNotFoundPanel(): ReactElement {
+    return (
+        <Layout>
+            <div className="report-page__container">
+                <div className="report-page__not-found">Доклад не найден</div>
+            </div>
+        </Layout>
+    );
+}
+
+function ReportLoadingContainer(): ReactElement {
+    return (
+        <Layout>
+            <div className="report-page__container">
+                <div className="report-page__spinner-container">
+                    <Spinner width="20px" height="20px" />
+                </div>
+            </div>
+        </Layout>
     );
 }
 
@@ -121,31 +145,17 @@ export function ReportPage(): ReactElement {
     }
 
     if (isReportsLoading) {
-        return (
-            <Layout>
-                <div className="report-page__container">
-                    <div className="report-page__loading">
-                        <Spinner width="20px" height="20px" />
-                    </div>
-                </div>
-            </Layout>
-        );
+        return <ReportLoadingContainer />;
     }
 
     if (!report) {
-        return (
-            <Layout>
-                <div className="report-page__container">
-                    <div className="report-page__not-found">Доклад не найден</div>
-                </div>
-            </Layout>
-        );
+        return <ReportNotFoundPanel />
     }
 
     return (
         <Layout>
             <div className="report-page__container">
-                <ReportDetails
+                <ReportInfo
                     report={report}
                     handleStartClick={() => startMutation.mutate()}
                     handleEndClick={() => endMutation.mutate()}
@@ -158,7 +168,7 @@ export function ReportPage(): ReactElement {
                 />
                 <div className="report-page__questions-list">
                     {isQuestionsLoading ? (
-                        <div className="report-page__loading">
+                        <div className="report-page__spinner-container">
                             <Spinner width="20px" height="20px" />
                         </div>
                     ) : (
@@ -176,26 +186,17 @@ export function ReportPage(): ReactElement {
                 </div>
             </div>
 
-            <dialog ref={dialogRef} className="report-page__ask-modal">
-                <span className="report-page__ask-header">Задать вопрос</span>
-
-                <form onSubmit={handleQuestionSubmit} className="report-page__ask-form" id="askForm">
-                    <input className="report-page__ask-section-input" name="questionTheme" placeholder="Тема" required minLength={3} maxLength={50} />
-                    <textarea className="report-page__ask-section-input" name="questionText" placeholder="Текст" required minLength={10} maxLength={200} rows={4} />
-                </form>
-
-                <div className="report-page__ask-actions">
-                    <button className="report-page__ask-close" type="button" onClick={closeModal}>Отмена</button>
-                    <Button
-                        className="report-page__ask-send"
-                        type="submit"
-                        form="askForm"
-                        isLoading={addQuestionMutation.isPending}
-                    >
-                        Отправить
-                    </Button>
-                </div>
-            </dialog>
+            <Modal
+                ref={dialogRef}
+                title="Задать вопрос"
+                onClose={closeModal}
+                onSubmit={handleQuestionSubmit}
+                submitButtonText="Отправить"
+                isSubmitLoading={addQuestionMutation.isPending}
+            >
+                <Input name="questionTheme" placeholder="Тема" required minLength={3} maxLength={50} />
+                <TextArea name="questionText" placeholder="Текст" required minLength={10} maxLength={200} rows={4} />
+            </Modal>
         </Layout>
     );
 }

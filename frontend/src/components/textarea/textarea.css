@@ -1,0 +1,18 @@
+﻿.textarea {
+    outline: none;
+    background-color: var(--panel-color);
+    color: var(--text-color);
+    font-family: Montserrat, serif;
+    font-size: var(--font-size-text);
+    border: 1px solid var(--text-color);
+    padding: 5px 10px;
+    box-sizing: border-box;
+    border-radius: var(--border-radius);
+    width: 100%;
+    resize: vertical;
+}
+
+.textarea::placeholder {
+    color: var(--text-color);
+    opacity: var(--translucent-percent);
+}

@@ -1,94 +1,88 @@
-﻿import classNames from 'classnames';
 import type { ReactElement } from 'react';
-import { Link, generatePath } from 'react-router-dom';
-
-import { convertReportStatusToString, formatTimeWithOffset } from '../../utils/utils.ts';
-import { ReportStatus } from '../../enums/report-status.ts';
 import type { ReportData } from '../../types/report-data.ts';
-import type { IsoString } from '../../types/iso-string.ts';
-import { AppRoute } from '../../enums/app-route.ts';
+import { convertReportStatusToString } from '../../utils/utils.ts';
+import { Button } from '../button/button.tsx';
 
 import './report-info.css';
+import { ReportStatus } from '../../enums/report-status.ts';
 
-type ConferenceInfoProps = {
+type ReportDetailsProps = {
     report: ReportData;
-    questionsCount?: number;
+    handleStartClick: () => void;
+    handleEndClick: () => void;
+    isStartButtonLoading: boolean;
+    isEndButtonLoading: boolean;
 }
 
-function TimingInfo({ scheduledStartDate, scheduledEndDate, reportStatus, actualStartDate, actualEndDate }: {
-    scheduledStartDate: IsoString;
-    scheduledEndDate: IsoString;
-    reportStatus: ReportStatus;
-    actualStartDate?: IsoString;
-    actualEndDate?: IsoString;
-}): ReactElement {
-    const beginTime = formatTimeWithOffset(scheduledStartDate);
-    const endTime = formatTimeWithOffset(scheduledEndDate);
-    return (
-        <table>
-            <tbody>
-            <tr className="report-info__timing-section">
-                <th className="report-info__timing-key">Начало</th>
-                <td className="report-info__timing-value">{beginTime}</td>
-            </tr>
-            <tr className="report-info__timing-section">
-                <th className="report-info__timing-key">Конец</th>
-                <td className="report-info__timing-value">{endTime}</td>
-            </tr>
-            <tr className="report-info__timing-section">
-                <th className="report-info__timing-key">Статус</th>
-                <td className="report-info__timing-value">
-                    {convertReportStatusToString(reportStatus, actualStartDate, actualEndDate)}
-                </td>
-            </tr>
-            </tbody>
-        </table>
+export function ReportInfo({
+                               report,
+                               handleStartClick,
+                               handleEndClick,
+                               isStartButtonLoading,
+                               isEndButtonLoading
+                           }: ReportDetailsProps): ReactElement {
+    const getTime = (isoDate: string) => {
+        const date = new Date(isoDate);
+        const hh = String(date.getHours()).padStart(2, '0');
+        const mm = String(date.getMinutes()).padStart(2, '0');
+        return `${hh}:${mm}`;
+    };
+
+    const startTime = getTime(report.scheduledStartDate);
+    const endTime = getTime(report.scheduledEndDate);
+    const statusString = convertReportStatusToString(
+        report.status,
+        report.actualStartDate,
+        report.actualEndDate
     );
-}
-
-export function ReportInfo({ report, questionsCount = 0 }: ConferenceInfoProps): ReactElement {
-    const isStarted = report.status === ReportStatus.Started;
-    const isEnded = report.status === ReportStatus.Ended;
-    const reportLink = generatePath(AppRoute.Report, { id: report.id });
 
     return (
-        <div className={classNames(
-            'report-info',
-            { 'report-info-ended': isEnded }
-        )}>
-            <div className="report-info__header">
-                <span className="report-info__title">{report.title}</span>
-                <span className="report-info__speaker">
-                    {`${report.speaker.name} ${report.speaker.surname}`}
-                </span>
+        <div className="report-details">
+            <div className="report-details__header">
+                <span className="report-details__title">{report.title}</span>
+                <div className="report-details__speaker">
+                    {report.speaker.name} {report.speaker.surname}
+                </div>
             </div>
 
-            <div className="report-info__timing">
-                <TimingInfo
-                    scheduledStartDate={report.scheduledStartDate}
-                    scheduledEndDate={report.scheduledEndDate}
-                    actualStartDate={report.actualStartDate}
-                    actualEndDate={report.actualEndDate}
-                    reportStatus={report.status}
-                />
+            <div className="report-details__info-row">
+                <div className="report-details__info-item">
+                    <span className="report-details__key">Начало:</span>
+                    <span className="report-details__value">{startTime}</span>
+                </div>
+                <div className="report-details__info-item">
+                    <span className="report-details__key">Конец:</span>
+                    <span className="report-details__value">{endTime}</span>
+                </div>
+                <div className="report-details__info-item">
+                    <span className="report-details__key">Статус:</span>
+                    <span className="report-details__value">{statusString}</span>
+                </div>
             </div>
 
-            <div className={classNames(
-                'report-info__questions',
-                { "report-info__questions-not-started": !isStarted }
-            )}>
-                <Link to={reportLink} className="report-info__questions-button">
-                    <span className="report-info__questions-button-title">Вопросы</span>
-                    <span className="report-info__questions-button-count">{questionsCount}</span>
-                </Link>
-            </div>
-            <div className={classNames(
-                'report-info__goto',
-                { "report-info__goto-started": isStarted }
-            )}>
-                <Link to={reportLink} className="report-info__goto-button">
-                    <span className="report-info__goto-button-title">Перейти</span>
-                </Link>
+            <div className="report-details__info-row">
+                {report.status === ReportStatus.NotStarted && (
+                    <Button
+                        className="report-details__action-button"
+                        spinnerWidth="10px"
+                        spinnerHeight="10px"
+                        onClick={handleStartClick}
+                        isLoading={isStartButtonLoading}
+                    >
+                        Начать доклад
+                    </Button>
+                )}
+                {report.status === ReportStatus.Started && (
+                    <Button
+                        className="report-details__action-button"
+                        spinnerWidth="10px"
+                        spinnerHeight="10px"
+                        onClick={handleEndClick}
+                        isLoading={isEndButtonLoading}
+                    >
+                        Завершить доклад
+                    </Button>
+                )}
             </div>
         </div>
     );

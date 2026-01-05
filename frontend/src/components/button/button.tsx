@@ -13,10 +13,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export function Button({
     isLoading,
-    children,
-    className,
     spinnerWidth,
     spinnerHeight,
+    className,
+    children,
     ...props
 }: ButtonProps): ReactElement {
     return (

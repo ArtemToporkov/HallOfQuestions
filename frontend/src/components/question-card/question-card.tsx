@@ -44,8 +44,8 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
     return (
         <div className="question-card">
             <div className="question-card__question">
-                <span className="question-card__question-theme">{question.theme}</span>
-                <span className="question-card__question-text">{question.text}</span>
+                <span className="question-card__theme">{question.theme}</span>
+                <span className="question-card__text">{question.text}</span>
             </div>
             <div className="question-card__likes">
                 <div className={classNames(
@@ -55,7 +55,7 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
                     <button
                         className={classNames(
                             'question-card__like-button',
-                            { 'question-card__like-button-liked': isLiked }
+                            { 'question-card__like-button--active': isLiked }
                         )}
                         type="button"
                         aria-label={isLiked ? "unlike" : "like"}
@@ -69,7 +69,7 @@ export function QuestionCard({ question }: QuestionCardProps): ReactElement {
                     'question-card__likes-spinner',
                     { 'question-card__likes-spinner--loading': toggleLikeMutation.isPending }
                 )}>
-                    <Spinner width="14px" height="14px" />
+                    <Spinner width="20px" height="20px" />
                 </div>
             </div>
         </div>

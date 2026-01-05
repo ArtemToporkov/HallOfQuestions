@@ -2,11 +2,12 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
 import { Layout } from '../../components/layout/layout.tsx';
-import { ReportInfo } from '../../components/report-info/report-info.tsx';
+import { ReportCard } from '../../components/report-card/report-card.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
 import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
-import { Button } from '../../components/button/button.tsx';
 import { Spinner } from '../../components/spinner/spinner.tsx';
+import { Modal } from '../../components/modal/modal.tsx';
+import { Input } from '../../components/input/input.tsx';
 import type { ReportData } from '../../types/report-data.ts';
 
 import './reports-page.css';
@@ -88,7 +89,7 @@ function ReportsList({ reports, isLoading }: { reports: ReportData[], isLoading:
 
     return (
         <div className="reports-page__reports-list">
-            {reports.map((r) => <ReportInfo key={r.id} report={r} />)}
+            {reports.map((r) => <ReportCard key={r.id} report={r} />)}
         </div>
     );
 }
@@ -156,44 +157,35 @@ export function ReportsPage(): ReactElement {
                 <ReportsList reports={reportsByStatus} isLoading={isLoading} />
             </div>
 
-            <dialog ref={dialogRef} className="reports-page__create-modal">
-                <span className="reports-page__create-header">Создать доклад</span>
-
-                <form onSubmit={handleSubmit} className="reports-page__create-form" id="createForm">
-                    <div className="reports-page__create-section">
-                        <span className="reports-page__create-section-header">Название</span>
-                        <input className="reports-page__create-section-input" name="reportTitle" placeholder="Название" required minLength={10} maxLength={50} />
-                    </div>
-
-                    <div className="reports-page__create-section">
-                        <span className="reports-page__create-section-header">Спикер</span>
-                        <input className="reports-page__create-section-input" name="speakerName" placeholder="Имя" required />
-                        <input className="reports-page__create-section-input" name="speakerSurname" placeholder="Фамилия" required />
-                    </div>
-
-                    <div className="reports-page__create-section">
-                        <label htmlFor="reportStartDate">Начало</label>
-                        <input className="reports-page__create-section-input" name="reportStartDate" type="datetime-local" required />
-                    </div>
-
-                    <div className="reports-page__create-section">
-                        <label htmlFor="reportTitle">Конец</label>
-                        <input className="reports-page__create-section-input" name="reportEndDate" type="datetime-local" required />
-                    </div>
-                </form>
-
-                <div className="reports-page__create-actions">
-                    <button className="reports-page__create-close" type="button" onClick={closeModal}>Отмена</button>
-                    <Button
-                        className="reports-page__create-send"
-                        type="submit"
-                        form="createForm"
-                        isLoading={createReportMutation.isPending}
-                    >
-                        Создать
-                    </Button>
+            <Modal
+                ref={dialogRef}
+                title="Создать доклад"
+                onClose={closeModal}
+                onSubmit={handleSubmit}
+                submitButtonText="Создать"
+                isSubmitLoading={createReportMutation.isPending}
+            >
+                <div className="reports-page__create-section">
+                    <span className="reports-page__create-section-header">Название</span>
+                    <Input name="reportTitle" placeholder="Название" required minLength={10} maxLength={50} />
                 </div>
-            </dialog>
+
+                <div className="reports-page__create-section">
+                    <span className="reports-page__create-section-header">Спикер</span>
+                    <Input name="speakerName" placeholder="Имя" required />
+                    <Input name="speakerSurname" placeholder="Фамилия" required />
+                </div>
+
+                <div className="reports-page__create-section">
+                    <label htmlFor="reportStartDate">Начало</label>
+                    <Input name="reportStartDate" type="datetime-local" required />
+                </div>
+
+                <div className="reports-page__create-section">
+                    <label htmlFor="reportTitle">Конец</label>
+                    <Input name="reportEndDate" type="datetime-local" required />
+                </div>
+            </Modal>
         </Layout>
     );
 }
