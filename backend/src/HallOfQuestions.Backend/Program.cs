@@ -119,8 +119,7 @@ else
             Guid.NewGuid().ToString(),
             id,
             request.QuestionTheme,
-            request.QuestionText,
-            DateTime.UtcNow);
+            request.QuestionText);
         await questionRepository.AddAsync(question);
         return Results.Created($"/api/reports/{id}/questions/{question.Id}", question);
     });

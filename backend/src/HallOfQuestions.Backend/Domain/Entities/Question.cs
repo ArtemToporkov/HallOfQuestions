@@ -8,16 +8,14 @@ public class Question
     public string ReportId { get; }
     public string Theme { get; }
     public string Text { get; }
-    public DateTime CreatedAt { get; }
     public int LikesCount { get; private set; }
 
-    public Question(string id, string reportId, string theme, string text, DateTime createdAt)
+    public Question(string id, string reportId, string theme, string text)
     {
         Id = id;
         ReportId = reportId;
         Theme = theme;
         Text = text;
-        CreatedAt = createdAt;
         LikesCount = 0;
     }
 
@@ -26,12 +24,11 @@ public class Question
         string reportId,
         string theme,
         string text,
-        DateTime createdAt,
         int likesCount,
         bool isValidated = true) =>
         !isValidated
             ? throw new InvalidOperationException("State to initialize Question from should be validated")
-            : new Question(id, reportId, theme, text, createdAt) { LikesCount = likesCount };
+            : new Question(id, reportId, theme, text) { LikesCount = likesCount };
 
     public void Like() => LikesCount++;
 

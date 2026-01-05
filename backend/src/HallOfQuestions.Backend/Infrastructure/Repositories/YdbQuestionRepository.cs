@@ -11,7 +11,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
     private const string ReportIdColumnName = "report_id";
     private const string ThemeColumnName = "theme";
     private const string TextColumnName = "text";
-    private const string CreatedAtColumnName = "created_at";
     private const string LikesCountColumnName = "likes_count";
     
     public async Task AddAsync(Question question, CancellationToken cancellationToken = default)
@@ -22,7 +21,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                                 {ReportIdColumnName},
                                 {ThemeColumnName},
                                 {TextColumnName},
-                                {CreatedAtColumnName},
                                 {LikesCountColumnName}
                             )
                             VALUES (
@@ -30,7 +28,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                                 ${ReportIdColumnName},
                                 ${ThemeColumnName},
                                 ${TextColumnName},
-                                ${CreatedAtColumnName},
                                 ${LikesCountColumnName}
                             );
                             """;
@@ -46,7 +43,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                                 {ReportIdColumnName},
                                 {ThemeColumnName},
                                 {TextColumnName},
-                                {CreatedAtColumnName},
                                 {LikesCountColumnName}
                             FROM questions
                             WHERE {ReportIdColumnName} = ${ReportIdColumnName}
@@ -74,7 +70,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                                 {ReportIdColumnName},
                                 {ThemeColumnName},
                                 {TextColumnName},
-                                {CreatedAtColumnName},
                                 {LikesCountColumnName}
                             FROM questions
                             WHERE {IdColumnName} = ${IdColumnName}
@@ -100,7 +95,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
                             SET {ReportIdColumnName} = ${ReportIdColumnName},
                                 {ThemeColumnName} = ${ThemeColumnName},
                                 {TextColumnName} = ${TextColumnName},
-                                {CreatedAtColumnName} = ${CreatedAtColumnName},
                                 {LikesCountColumnName} = ${LikesCountColumnName}
                             WHERE {IdColumnName} = ${IdColumnName}
                             """;
@@ -115,7 +109,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
             [$"${ReportIdColumnName}"] = YdbValue.MakeUtf8(question.ReportId),
             [$"${ThemeColumnName}"] = YdbValue.MakeUtf8(question.Theme),
             [$"${TextColumnName}"] = YdbValue.MakeUtf8(question.Text),
-            [$"${CreatedAtColumnName}"] = YdbValue.MakeDatetime(question.CreatedAt),
             [$"${LikesCountColumnName}"] = YdbValue.MakeInt32(question.LikesCount)
         };
 
@@ -125,7 +118,6 @@ public class YdbQuestionRepository(YdbDataSource ydbDataSource) : YdbBaseReposit
             reader.GetFieldValue<string>(reader.GetOrdinal(ReportIdColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(ThemeColumnName)),
             reader.GetFieldValue<string>(reader.GetOrdinal(TextColumnName)),
-            reader.GetFieldValue<DateTime>(reader.GetOrdinal(CreatedAtColumnName)),
             reader.GetFieldValue<int>(reader.GetOrdinal(LikesCountColumnName)),
             isValidated: true);
 }
