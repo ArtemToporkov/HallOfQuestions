@@ -37,7 +37,7 @@ yc serverless container revision deploy `
     --image "cr.yandex/${YANDEX_CONTAINER_REGISTRY_ID}/${IMAGE_NAME}:${IMAGE_TAG}" `
     --cores 1 `
     --memory 1024MB `
-    --concurrency 4 `
+    --concurrency 1 `
     --execution-timeout 30s `
     --service-account-id $YANDEX_CLOUD_SERVICE_ACCOUNT_ID `
     --folder-id $YANDEX_CLOUD_FOLDER_ID `
