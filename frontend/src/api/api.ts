@@ -71,8 +71,8 @@ export const getReports = async (): Promise<ReportData[]> => {
 
 export type AddReportRequest = {
     reportTitle: string,
-    reportStartDate: string,
-    reportEndDate: string,
+    reportStartDateUtc: string,
+    reportEndDateUtc: string,
     speaker: SpeakerData
 }
 

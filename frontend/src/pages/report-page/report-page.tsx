@@ -1,6 +1,6 @@
+import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
 import { type FormEvent, type ReactElement, useState } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';

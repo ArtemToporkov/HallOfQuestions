@@ -6,9 +6,9 @@ export type ReportData = {
     id: string;
     title: string;
     speaker: SpeakerData;
-    scheduledStartDate: IsoString;
-    scheduledEndDate: IsoString;
+    scheduledStartDateUtc: IsoString;
+    scheduledEndDateUtc: IsoString;
     status: ReportStatus;
-    actualStartDate?: IsoString;
-    actualEndDate?: IsoString;
+    actualStartDateUtc?: IsoString;
+    actualEndDateUtc?: IsoString;
 }

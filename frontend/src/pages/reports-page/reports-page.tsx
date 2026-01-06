@@ -127,8 +127,8 @@ export function ReportsPage(): ReactElement {
 
         const request: AddReportRequest = {
             reportTitle: formData.get('reportTitle') as string,
-            reportStartDate: new Date(formData.get('reportStartDate') as string).toISOString(),
-            reportEndDate: new Date(formData.get('reportEndDate') as string).toISOString(),
+            reportStartDateUtc: new Date(formData.get('reportStartDate') as string).toISOString(),
+            reportEndDateUtc: new Date(formData.get('reportEndDate') as string).toISOString(),
             speaker: {
                 name: formData.get('speakerName') as string,
                 surname: formData.get('speakerSurname') as string

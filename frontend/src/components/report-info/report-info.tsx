@@ -29,12 +29,12 @@ export function ReportInfo({
         return `${hh}:${mm}`;
     };
 
-    const startTime = getTime(report.scheduledStartDate);
-    const endTime = getTime(report.scheduledEndDate);
+    const startTime = getTime(report.scheduledStartDateUtc);
+    const endTime = getTime(report.scheduledEndDateUtc);
     const statusString = convertReportStatusToString(
         report.status,
-        report.actualStartDate,
-        report.actualEndDate
+        report.actualStartDateUtc,
+        report.actualEndDateUtc
     );
 
     return (

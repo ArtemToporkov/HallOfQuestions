@@ -10,20 +10,20 @@ import type { IsoString } from '../../types/iso-string.ts';
 
 import './report-card.css';
 
-type ConferenceInfoProps = {
+type ReportCardProps = {
     report: ReportData;
     questionsCount?: number;
 }
 
-function TimingInfo({ scheduledStartDate, scheduledEndDate, reportStatus, actualStartDate, actualEndDate }: {
-    scheduledStartDate: IsoString;
-    scheduledEndDate: IsoString;
+function TimingInfo({ scheduledStartDateUtc, scheduledEndDateUtc, reportStatus, actualStartDateUtc, actualEndDateUtc }: {
+    scheduledStartDateUtc: IsoString;
+    scheduledEndDateUtc: IsoString;
     reportStatus: ReportStatus;
-    actualStartDate?: IsoString;
-    actualEndDate?: IsoString;
+    actualStartDateUtc?: IsoString;
+    actualEndDateUtc?: IsoString;
 }): ReactElement {
-    const beginTime = formatTimeWithOffset(scheduledStartDate);
-    const endTime = formatTimeWithOffset(scheduledEndDate);
+    const beginTime = formatTimeWithOffset(scheduledStartDateUtc);
+    const endTime = formatTimeWithOffset(scheduledEndDateUtc);
     return (
         <table>
             <tbody>
@@ -38,7 +38,7 @@ function TimingInfo({ scheduledStartDate, scheduledEndDate, reportStatus, actual
             <tr>
                 <th className="report-info__timing-key">Статус</th>
                 <td className="report-info__timing-value">
-                    {convertReportStatusToString(reportStatus, actualStartDate, actualEndDate)}
+                    {convertReportStatusToString(reportStatus, actualStartDateUtc, actualEndDateUtc)}
                 </td>
             </tr>
             </tbody>
@@ -46,7 +46,7 @@ function TimingInfo({ scheduledStartDate, scheduledEndDate, reportStatus, actual
     );
 }
 
-export function ReportCard({ report, questionsCount = 0 }: ConferenceInfoProps): ReactElement {
+export function ReportCard({ report, questionsCount = 0 }: ReportCardProps): ReactElement {
     const isStarted = report.status === ReportStatus.Started;
     const isEnded = report.status === ReportStatus.Ended;
     const reportLink = generatePath(AppRoute.Report, { id: report.id });
@@ -65,10 +65,10 @@ export function ReportCard({ report, questionsCount = 0 }: ConferenceInfoProps):
 
             <div className="report-info__timing">
                 <TimingInfo
-                    scheduledStartDate={report.scheduledStartDate}
-                    scheduledEndDate={report.scheduledEndDate}
-                    actualStartDate={report.actualStartDate}
-                    actualEndDate={report.actualEndDate}
+                    scheduledStartDateUtc={report.scheduledStartDateUtc}
+                    scheduledEndDateUtc={report.scheduledEndDateUtc}
+                    actualStartDateUtc={report.actualStartDateUtc}
+                    actualEndDateUtc={report.actualEndDateUtc}
                     reportStatus={report.status}
                 />
             </div>
