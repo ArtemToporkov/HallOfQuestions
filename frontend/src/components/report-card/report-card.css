@@ -1,4 +1,4 @@
-﻿.report-info {
+﻿.report-card {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -11,56 +11,56 @@
     width: 80%;
 }
 
-.report-info--ended > * {
+.report-card--ended > * {
     opacity: var(--translucent-percent);
 }
 
-.report-info__title {
+.report-card__title {
     word-wrap: anywhere;
     font-weight: bold;
 }
 
-.report-info__speaker {
+.report-card__speaker {
     font-weight: var(--font-weight-light);
 }
 
-.report-info__timing {
+.report-card__timing {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
 }
 
-.report-info__header {
+.report-card__header {
     flex: 5 1 0;
 }
 
-.report-info__timing {
+.report-card__timing {
     flex: 4 1 0;
 }
 
-.report-info__header {
+.report-card__header {
     display: flex;
     flex-direction: column;
 }
 
-.report-info__timing-key,
-.report-info__timing-value {
+.report-card__timing-key,
+.report-card__timing-value {
     text-align: start;
     padding: 0;
 }
 
-.report-info__timing-value {
+.report-card__timing-value {
     padding-left: 20px;
     font-weight: bold;
 }
 
-.report-info__timing-key {
+.report-card__timing-key {
     font-weight: var(--font-weight-light);
 }
 
-.report-info__goto,
-.report-info__questions {
+.report-card__goto,
+.report-card__questions {
     display: flex;
     flex-direction: row;
     justify-content: flex-end;
@@ -68,40 +68,40 @@
     opacity: 1;
 }
 
-.report-info__goto--hidden,
-.report-info__questions--hidden {
+.report-card__goto--hidden,
+.report-card__questions--hidden {
     display: none;
 }
 
-.report-info__button {
+.report-card__button {
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 10px;
     background-color: var(--text-color);
     color: var(--panel-color);
-    padding: 5px 10px;
+    padding: 5px 15px;
     border-radius: var(--border-radius);
     cursor: pointer;
     flex: 0 0 auto;
     text-decoration: none;
 }
 
-.report-info__button:hover {
+.report-card__button:hover {
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 }
 
-.report-info__button-title {
+.report-card__button-title {
     font-weight: bold;
 }
 
-.report-info__button-count {
+.report-card__button-count {
     font-weight: normal;
 }
 
 @media (max-width: 768px) {
-    .report-info {
+    .report-card {
         flex-direction: column;
         padding: 30px 40px;
         width: 100%;
@@ -109,16 +109,16 @@
         gap: 30px;
     }
 
-    .report-info__title {
+    .report-card__title {
         text-align: center;
     }
 
-    .report-info__header {
+    .report-card__header {
         align-items: center;
         gap: 3px;
     }
 
-    .report-info__button {
+    .report-card__button {
         background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
     }
 }

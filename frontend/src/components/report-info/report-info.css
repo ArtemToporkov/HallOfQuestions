@@ -1,4 +1,4 @@
-﻿.report-details {
+﻿.report-info {
     background-color: var(--panel-color);
     border-radius: var(--border-radius);
     display: flex;
@@ -10,7 +10,7 @@
     width: 80%;
 }
 
-.report-details__header {
+.report-info__header {
     display: flex;
     flex-direction: column;
     gap: 5px;
@@ -18,48 +18,48 @@
     justify-content: center;
 }
 
-.report-details__title {
+.report-info__title {
     font-size: var(--font-size-h2);
     font-weight: bold;
     text-align: center;
     word-wrap: anywhere;
 }
 
-.report-details__speaker {
+.report-info__speaker {
     font-size: var(--font-size-text);
     font-weight: var(--font-weight-light);
 }
 
-.report-details__table {
+.report-info__table {
     border-collapse: collapse;
 }
 
-.report-details__key {
+.report-info__key {
     font-weight: var(--font-weight-light);
     text-align: left;
 }
 
-.report-details__value {
+.report-info__value {
     font-weight: bold;
     text-align: left;
 }
 
-.report-details__title,
-.report-details__speaker,
-.report-details__key,
-.report-details__value {
+.report-info__title,
+.report-info__speaker,
+.report-info__key,
+.report-info__value {
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
-.report-details__actions {
+.report-info__actions {
     width: 100%;
     display: flex;
     justify-content: center;
 }
 
-.report-details__action-button {
+.report-info__action-button {
     font-weight: bold;
     color: var(--panel-color);
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
@@ -72,16 +72,16 @@
 }
 
 @media (min-width: 769px) {
-    .report-details__table {
+    .report-info__table {
         display: block;
     }
-    .report-details__table tbody {
+    .report-info__table tbody {
         display: flex;
         flex-direction: row;
         gap: 30px;
         justify-content: center;
     }
-    .report-details__table tr {
+    .report-info__table tr {
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -90,10 +90,10 @@
 }
 
 @media (max-width: 768px) {
-    .report-details {
+    .report-info {
         width: 100%;
     }
-    .report-details__value {
+    .report-info__value {
         padding-left: 20px;
     }
 }

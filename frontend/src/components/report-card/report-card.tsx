@@ -40,16 +40,16 @@ function TimingInfo({ scheduledStartDateUtc, scheduledEndDateUtc, reportStatus, 
         <table>
             <tbody>
             <tr>
-                <th className="report-info__timing-key">Начало</th>
-                <td className="report-info__timing-value">{startDisplay}</td>
+                <th className="report-card__timing-key">Начало</th>
+                <td className="report-card__timing-value">{startDisplay}</td>
             </tr>
             <tr>
-                <th className="report-info__timing-key">Конец</th>
-                <td className="report-info__timing-value">{endDisplay}</td>
+                <th className="report-card__timing-key">Конец</th>
+                <td className="report-card__timing-value">{endDisplay}</td>
             </tr>
             <tr>
-                <th className="report-info__timing-key">Статус</th>
-                <td className="report-info__timing-value">
+                <th className="report-card__timing-key">Статус</th>
+                <td className="report-card__timing-value">
                     {convertReportStatusToString(reportStatus, actualStartDateUtc, actualEndDateUtc)}
                 </td>
             </tr>
@@ -65,17 +65,17 @@ export function ReportCard({ report, questionsCount = 0 }: ReportCardProps): Rea
 
     return (
         <div className={classNames(
-            'report-info',
-            { 'report-info--ended': isEnded }
+            'report-card',
+            { 'report-card--ended': isEnded }
         )}>
-            <div className="report-info__header">
-                <span className="report-info__title">{report.title}</span>
-                <span className="report-info__speaker">
+            <div className="report-card__header">
+                <span className="report-card__title">{report.title}</span>
+                <span className="report-card__speaker">
                     {`${report.speaker.name} ${report.speaker.surname}`}
                 </span>
             </div>
 
-            <div className="report-info__timing">
+            <div className="report-card__timing">
                 <TimingInfo
                     scheduledStartDateUtc={report.scheduledStartDateUtc}
                     scheduledEndDateUtc={report.scheduledEndDateUtc}
@@ -86,20 +86,20 @@ export function ReportCard({ report, questionsCount = 0 }: ReportCardProps): Rea
             </div>
 
             <div className={classNames(
-                'report-info__questions',
-                { "report-info__questions--hidden": !isStarted }
+                'report-card__questions',
+                { "report-card__questions--hidden": !isStarted }
             )}>
-                <Link to={reportLink} className="report-info__button">
-                    <span className="report-info__button-title">Вопросы</span>
-                    <span className="report-info__button-count">{questionsCount}</span>
+                <Link to={reportLink} className="report-card__button">
+                    <span className="report-card__button-title">Вопросы</span>
+                    <span className="report-card__button-count">{questionsCount}</span>
                 </Link>
             </div>
             <div className={classNames(
-                'report-info__goto',
-                { "report-info__goto--hidden": isStarted }
+                'report-card__goto',
+                { "report-card__goto--hidden": isStarted }
             )}>
-                <Link to={reportLink} className="report-info__button">
-                    <span className="report-info__button-title">Перейти</span>
+                <Link to={reportLink} className="report-card__button">
+                    <span className="report-card__button-title">Перейти</span>
                 </Link>
             </div>
         </div>

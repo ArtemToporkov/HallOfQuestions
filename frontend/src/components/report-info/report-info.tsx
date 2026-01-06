@@ -43,35 +43,35 @@ export function ReportInfo({
     );
 
     return (
-        <div className="report-details">
-            <div className="report-details__header">
-                <span className="report-details__title">{report.title}</span>
-                <div className="report-details__speaker">
+        <div className="report-info">
+            <div className="report-info__header">
+                <span className="report-info__title">{report.title}</span>
+                <div className="report-info__speaker">
                     {report.speaker.name} {report.speaker.surname}
                 </div>
             </div>
 
-            <table className="report-details__table">
+            <table className="report-info__table">
                 <tbody>
                 <tr>
-                    <th className="report-details__key">Начало:</th>
-                    <td className="report-details__value">{startTime}</td>
+                    <th className="report-info__key">Начало:</th>
+                    <td className="report-info__value">{startTime}</td>
                 </tr>
                 <tr>
-                    <th className="report-details__key">Конец:</th>
-                    <td className="report-details__value">{endTime}</td>
+                    <th className="report-info__key">Конец:</th>
+                    <td className="report-info__value">{endTime}</td>
                 </tr>
                 <tr>
-                    <th className="report-details__key">Статус:</th>
-                    <td className="report-details__value">{statusString}</td>
+                    <th className="report-info__key">Статус:</th>
+                    <td className="report-info__value">{statusString}</td>
                 </tr>
                 </tbody>
             </table>
 
-            <div className="report-details__actions">
+            <div className="report-info__actions">
                 {report.status === ReportStatus.NotStarted && (
                     <Button
-                        className="report-details__action-button"
+                        className="report-info__action-button"
                         spinnerWidth="10px"
                         spinnerHeight="10px"
                         onClick={handleStartClick}
@@ -82,7 +82,7 @@ export function ReportInfo({
                 )}
                 {report.status === ReportStatus.Started && (
                     <Button
-                        className="report-details__action-button"
+                        className="report-info__action-button"
                         spinnerWidth="10px"
                         spinnerHeight="10px"
                         onClick={handleEndClick}
