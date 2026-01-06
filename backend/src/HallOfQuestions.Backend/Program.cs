@@ -15,6 +15,7 @@ builder.Services.AddYdbDataSource(builder.Configuration, builder.Environment);
 builder.Services.AddSingleton<YdbSchemaInitializer>();
 builder.Services.AddScoped<IQuestionRepository, YdbQuestionRepository>();
 builder.Services.AddScoped<IReportRepository, YdbReportRepository>();
+builder.Services.AddValidation();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddOpenApi();
@@ -63,14 +64,14 @@ else
         [FromBody] AddReportRequest request,
         [FromServices] IReportRepository repository) =>
     {
-        var person = new Person(request.Speaker.Name, request.Speaker.Surname);
+        var person = new Person(request.Speaker!.Name!, request.Speaker!.Surname!);
         var report = Report.PlanNew(
             Guid.NewGuid().ToString(),
-            request.ReportTitle,
+            request.ReportTitle!,
             person,
             DateTime.UtcNow,
-            request.ReportStartDateUtc,
-            request.ReportEndDateUtc);
+            request.ReportStartDateUtc!.Value,
+            request.ReportEndDateUtc!.Value);
         await repository.AddAsync(report);
         return Results.Created($"/api/reports/{report.Id}", report);
     });
@@ -119,8 +120,8 @@ else
         var question = new Question(
             Guid.NewGuid().ToString(),
             id,
-            request.QuestionTheme,
-            request.QuestionText);
+            request.QuestionTheme!,
+            request.QuestionText!);
         await questionRepository.AddAsync(question);
         return Results.Created($"/api/reports/{id}/questions/{question.Id}", question);
     });

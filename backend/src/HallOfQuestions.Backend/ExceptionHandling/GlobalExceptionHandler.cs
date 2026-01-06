@@ -8,7 +8,7 @@ namespace HallOfQuestions.Backend.ExceptionHandling;
 public class GlobalExceptionHandler : IExceptionHandler
 {
     private readonly Dictionary<Type, Func<Exception, HttpContext, CancellationToken, Task>> _handlers;
-        
+    
     public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
     {
         if (_handlers.TryGetValue(exception.GetType(), out var handler))
@@ -25,7 +25,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             cancellationToken);
         return true;
     }
-
+    
     public GlobalExceptionHandler() =>
         _handlers = new Dictionary<Type, Func<Exception, HttpContext, CancellationToken, Task>>
         {
@@ -38,8 +38,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             [typeof(BadRequestException)] = (exception, context, token) =>
                 HandleBadRequestException((BadRequestException)exception, context, token)
         };
-
-    private async Task HandleConflictExceptionAsync(
+    
+    private static async Task HandleConflictExceptionAsync(
         ConflictException exception,
         HttpContext httpContext,
         CancellationToken cancellationToken) =>
@@ -49,8 +49,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             exception.Message,
             httpContext,
             cancellationToken);
-
-    private async Task HandleDomainExceptionAsync(
+    
+    private static async Task HandleDomainExceptionAsync(
         DomainException exception,
         HttpContext httpContext,
         CancellationToken cancellationToken) =>
@@ -60,8 +60,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             exception.Message,
             httpContext,
             cancellationToken);
-
-    private async Task HandleNotFoundExceptionAsync(
+    
+    private static async Task HandleNotFoundExceptionAsync(
         NotFoundException exception,
         HttpContext httpContext,
         CancellationToken cancellationToken) =>
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler : IExceptionHandler
             httpContext,
             cancellationToken);
     
-    private async Task HandleBadRequestException(
+    private static async Task HandleBadRequestException(
         BadRequestException exception,
         HttpContext httpContext,
         CancellationToken cancellationToken) =>
@@ -82,8 +82,8 @@ public class GlobalExceptionHandler : IExceptionHandler
             exception.Message,
             httpContext,
             cancellationToken);
-
-    private async Task HandleExceptionAsync(
+    
+    private static async Task HandleExceptionAsync(
         int statusCode,
         string title,
         string detail,
