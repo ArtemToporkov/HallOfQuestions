@@ -22,18 +22,30 @@ function TimingInfo({ scheduledStartDateUtc, scheduledEndDateUtc, reportStatus, 
     actualStartDateUtc?: IsoString;
     actualEndDateUtc?: IsoString;
 }): ReactElement {
-    const beginTime = formatTimeWithOffset(scheduledStartDateUtc);
-    const endTime = formatTimeWithOffset(scheduledEndDateUtc);
+    let startDisplay: string;
+    let endDisplay: string;
+
+    if (reportStatus === ReportStatus.Started) {
+        startDisplay = formatTimeWithOffset(actualStartDateUtc ?? scheduledStartDateUtc);
+        endDisplay = '-';
+    } else if (reportStatus === ReportStatus.Ended) {
+        startDisplay = formatTimeWithOffset(actualStartDateUtc ?? scheduledStartDateUtc);
+        endDisplay = formatTimeWithOffset(actualEndDateUtc ?? scheduledEndDateUtc);
+    } else {
+        startDisplay = formatTimeWithOffset(scheduledStartDateUtc);
+        endDisplay = formatTimeWithOffset(scheduledEndDateUtc);
+    }
+
     return (
         <table>
             <tbody>
             <tr>
                 <th className="report-info__timing-key">Начало</th>
-                <td className="report-info__timing-value">{beginTime}</td>
+                <td className="report-info__timing-value">{startDisplay}</td>
             </tr>
             <tr>
                 <th className="report-info__timing-key">Конец</th>
-                <td className="report-info__timing-value">{endTime}</td>
+                <td className="report-info__timing-value">{endDisplay}</td>
             </tr>
             <tr>
                 <th className="report-info__timing-key">Статус</th>

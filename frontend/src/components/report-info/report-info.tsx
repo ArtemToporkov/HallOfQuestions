@@ -1,9 +1,9 @@
 import type { ReactElement } from 'react';
-import type { ReportData } from '../../types/report-data.ts';
 
 import { convertReportStatusToString, formatTimeWithOffset } from '../../utils/utils.ts';
 import { Button } from '../button/button.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
+import type { ReportData } from '../../types/report-data.ts';
 
 import './report-info.css';
 
@@ -22,8 +22,20 @@ export function ReportInfo({
     isStartButtonLoading,
     isEndButtonLoading
 }: ReportDetailsProps): ReactElement {
-    const startTime = formatTimeWithOffset(report.scheduledStartDateUtc);
-    const endTime = formatTimeWithOffset(report.scheduledEndDateUtc);
+    let startTime: string;
+    let endTime: string;
+
+    if (report.status === ReportStatus.Started) {
+        startTime = formatTimeWithOffset(report.actualStartDateUtc ?? report.scheduledStartDateUtc);
+        endTime = '-';
+    } else if (report.status === ReportStatus.Ended) {
+        startTime = formatTimeWithOffset(report.actualStartDateUtc ?? report.scheduledStartDateUtc);
+        endTime = formatTimeWithOffset(report.actualEndDateUtc ?? report.scheduledEndDateUtc);
+    } else {
+        startTime = formatTimeWithOffset(report.scheduledStartDateUtc);
+        endTime = formatTimeWithOffset(report.scheduledEndDateUtc);
+    }
+
     const statusString = convertReportStatusToString(
         report.status,
         report.actualStartDateUtc,
