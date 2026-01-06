@@ -51,22 +51,24 @@ export function ReportInfo({
                 </div>
             </div>
 
-            <div className="report-details__info-row">
-                <div className="report-details__info-item">
-                    <span className="report-details__key">Начало:</span>
-                    <span className="report-details__value">{startTime}</span>
-                </div>
-                <div className="report-details__info-item">
-                    <span className="report-details__key">Конец:</span>
-                    <span className="report-details__value">{endTime}</span>
-                </div>
-                <div className="report-details__info-item">
-                    <span className="report-details__key">Статус:</span>
-                    <span className="report-details__value">{statusString}</span>
-                </div>
-            </div>
+            <table className="report-details__table">
+                <tbody>
+                <tr>
+                    <th className="report-details__key">Начало:</th>
+                    <td className="report-details__value">{startTime}</td>
+                </tr>
+                <tr>
+                    <th className="report-details__key">Конец:</th>
+                    <td className="report-details__value">{endTime}</td>
+                </tr>
+                <tr>
+                    <th className="report-details__key">Статус:</th>
+                    <td className="report-details__value">{statusString}</td>
+                </tr>
+                </tbody>
+            </table>
 
-            <div className="report-details__info-row">
+            <div className="report-details__actions">
                 {report.status === ReportStatus.NotStarted && (
                     <Button
                         className="report-details__action-button"
