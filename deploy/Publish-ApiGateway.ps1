@@ -20,7 +20,7 @@ $BACKEND_SERVERLESS_CONTAINER_ID = yc serverless container get `
 
 Write-Host "Preparing OpenAPI specification in memory..."
 $specContent = Get-Content -Path $OPENAPI_SPECIFICATION_PATH -Raw
-$specContent = $specContent.Replace('${BACKEND_SERVERLESS_CONTAINER_ID}', $BACKEND_SERVERLESS_CONTAINER_ID)
+$specContent = $specContent.Replace('${BACKEND_YANDEX_CLOUD_SERVERLESS_CONTAINER_ID}', $BACKEND_SERVERLESS_CONTAINER_ID)
 $specContent = $specContent.Replace('${FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME}', $FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME)
 $specContent = $specContent.Replace('${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}', $YANDEX_CLOUD_SERVICE_ACCOUNT_ID)
 $tempFilePath = [System.IO.Path]::GetTempFileName()
