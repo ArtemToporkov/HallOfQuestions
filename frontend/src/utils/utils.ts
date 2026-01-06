@@ -3,15 +3,34 @@ import { ReportStatus } from '../enums/report-status.ts';
 
 export function formatTimeWithOffset(isoString: IsoString): string {
     const date = new Date(isoString);
+    const now = new Date();
 
-    const hh = String(date.getUTCHours()).padStart(2, '0');
-    const mm = String(date.getUTCMinutes()).padStart(2, '0');
+    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+    const diffTime = target.getTime() - today.getTime();
+    const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+    let datePart = '';
+    if (diffDays === 0) {
+        datePart = 'сегодня';
+    } else if (diffDays === 1) {
+        datePart = 'завтра';
+    } else {
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        datePart = `${dd}.${mm}.${yyyy}`;
+    }
+
+    const hh = String(date.getHours()).padStart(2, '0');
+    const mm = String(date.getMinutes()).padStart(2, '0');
 
     const offsetMinutes = -date.getTimezoneOffset();
     const offsetSign = offsetMinutes >= 0 ? '+' : '-';
     const offsetHours = Math.floor(Math.abs(offsetMinutes) / 60);
 
-    return `${hh}:${mm} UTC${offsetSign}${offsetHours}`;
+    return `${datePart} ${hh}:${mm} UTC${offsetSign}${offsetHours}`;
 }
 
 export function convertReportStatusToString(

@@ -22,6 +22,7 @@
     font-size: var(--font-size-h2);
     font-weight: bold;
     text-align: center;
+    word-wrap: anywhere;
 }
 
 .report-details__speaker {

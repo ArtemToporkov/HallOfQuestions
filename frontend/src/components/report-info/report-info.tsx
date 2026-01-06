@@ -1,8 +1,8 @@
-import { convertReportStatusToString } from '../../utils/utils.ts';
-import { Button } from '../button/button.tsx';
 import type { ReactElement } from 'react';
 import type { ReportData } from '../../types/report-data.ts';
 
+import { convertReportStatusToString, formatTimeWithOffset } from '../../utils/utils.ts';
+import { Button } from '../button/button.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
 
 import './report-info.css';
@@ -22,15 +22,8 @@ export function ReportInfo({
     isStartButtonLoading,
     isEndButtonLoading
 }: ReportDetailsProps): ReactElement {
-    const getTime = (isoDate: string) => {
-        const date = new Date(isoDate);
-        const hh = String(date.getHours()).padStart(2, '0');
-        const mm = String(date.getMinutes()).padStart(2, '0');
-        return `${hh}:${mm}`;
-    };
-
-    const startTime = getTime(report.scheduledStartDateUtc);
-    const endTime = getTime(report.scheduledEndDateUtc);
+    const startTime = formatTimeWithOffset(report.scheduledStartDateUtc);
+    const endTime = formatTimeWithOffset(report.scheduledEndDateUtc);
     const statusString = convertReportStatusToString(
         report.status,
         report.actualStartDateUtc,

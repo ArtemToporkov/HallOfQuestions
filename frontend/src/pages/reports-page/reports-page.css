@@ -57,7 +57,7 @@
 }
 
 .reports-page__status-choice-radio {
-    appearance: none;
+    display: none;
 }
 
 .reports-page__status-choice-radio:checked + .reports-page__status-choice-label {

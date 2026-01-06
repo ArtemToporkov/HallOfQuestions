@@ -44,4 +44,8 @@
     .main-page__description {
         width: 100%;
     }
+
+    .main-page__reports-link {
+        background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    }
 }
