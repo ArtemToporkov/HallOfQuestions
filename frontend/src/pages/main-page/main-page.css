@@ -19,6 +19,7 @@
     padding: 30px;
     border-radius: var(--border-radius);
     font-weight: var(--font-weight-light);
+    box-sizing: border-box;
 }
 
 .main-page__reports-link {
@@ -33,4 +34,14 @@
 
 .main-page__reports-link:hover {
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+}
+
+@media (max-width: 768px) {
+    .main-page__container {
+        padding: 80px 0;
+    }
+
+    .main-page__description {
+        width: 100%;
+    }
 }

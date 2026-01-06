@@ -37,7 +37,8 @@
 
 .report-page__not-found {
     font-weight: bold;
-    padding: 50px;
+    text-align: center;
+    padding: 50px 20px;
     box-sizing: border-box;
     width: 80%;
     background-color: var(--panel-color);
@@ -61,19 +62,19 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    box-sizing: border-box;
     gap: 20px;
     width: 80%;
 }
 
 .report-page__questions-list--loading {
     padding: 50px;
-    box-sizing: border-box;
 }
 
 .report-page__questions-list--empty {
     font-weight: bold;
-    padding: 50px;
-    box-sizing: border-box;
+    padding: 50px 20px;
+    text-align: center;
     background-color: var(--panel-color);
     border-radius: var(--border-radius);
 }
@@ -149,4 +150,18 @@
     justify-content: center;
     align-items: center;
     gap: 20px;
+}
+
+@media (max-width: 768px) {
+    .report-page__questions-list {
+        width: 100%;
+    }
+
+    .report-page__not-found {
+        width: 100%;
+    }
+
+    .report-page__header-ask-button {
+        background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    }
 }

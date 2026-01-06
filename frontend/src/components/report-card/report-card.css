@@ -16,7 +16,7 @@
 }
 
 .report-info__title {
-    text-wrap: wrap;
+    word-wrap: anywhere;
     font-weight: bold;
 }
 
@@ -31,15 +31,23 @@
     justify-content: flex-start;
 }
 
-.report-info__header,
-.report-info__timing,
-.report-info__questions {
-    flex: 1 1 auto;
+.report-info__header {
+    flex: 4 1 0;
+}
+
+.report-info__timing {
+    flex: 3 1 0;
 }
 
 .report-info__header {
     display: flex;
     flex-direction: column;
+}
+
+.report-info__timing-key,
+.report-info__timing-value {
+    text-align: start;
+    padding: 0;
 }
 
 .report-info__timing-value {
@@ -49,11 +57,6 @@
 
 .report-info__timing-key {
     font-weight: var(--font-weight-light);
-}
-
-.report-info__timing-key,
-.report-info__timing-value {
-    text-align: start;
 }
 
 .report-info__goto,
@@ -95,4 +98,27 @@
 
 .report-info__button-count {
     font-weight: normal;
+}
+
+@media (max-width: 768px) {
+    .report-info {
+        flex-direction: column;
+        padding: 30px 40px;
+        width: 100%;
+        justify-content: center;
+        gap: 30px;
+    }
+
+    .report-info__title {
+        text-align: center;
+    }
+
+    .report-info__header {
+        align-items: center;
+        gap: 3px;
+    }
+
+    .report-info__button {
+        background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    }
 }

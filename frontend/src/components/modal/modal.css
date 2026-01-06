@@ -62,3 +62,14 @@
 .modal__close-button:hover {
     background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
 }
+
+@media (max-width: 768px) {
+    .modal {
+        width: 80%;
+        min-width: auto;
+    }
+
+    .modal__close-button {
+        background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    }
+}

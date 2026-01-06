@@ -21,7 +21,7 @@
     --font-size-h2: 20px;
     --font-size-text: 16px;
     --font-size-text-small: 12px;
-    --font-weight-light: 200;
+    --font-weight-light: 300;
     --border-radius: 20px;
 
     font-family: Montserrat, serif;
@@ -87,4 +87,13 @@
 .Toastify__close-button {
     color: var(--gradient-second-color);
     opacity: 1;
+}
+
+@media (max-width: 768px) {
+    :root {
+        --font-size-h1: 25px;
+        --font-size-h2: 18px;
+        --font-size-text: 14px;
+        --font-size-text-small: 10px;
+    }
 }

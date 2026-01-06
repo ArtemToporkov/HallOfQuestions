@@ -45,6 +45,9 @@
 
 .reports-page__status-choice-option {
     cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .reports-page__status-choice-label {
@@ -62,6 +65,7 @@
 }
 
 .reports-page__reports-list {
+    font-size: var(--font-size-text);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -80,6 +84,7 @@
     justify-content: center;
     align-items: center;
     border-radius: var(--border-radius);
+    text-align: center;
 }
 
 .reports-page__reports-list--loading {
@@ -102,4 +107,14 @@
 
 .reports-page__create-section-header {
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .reports-page__reports-list {
+        width: 100%;
+    }
+
+    .reports-page__header-create-button {
+        background: linear-gradient(to right, var(--gradient-first-color), var(--gradient-second-color));
+    }
 }

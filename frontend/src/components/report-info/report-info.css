@@ -21,6 +21,7 @@
 .report-details__title {
     font-size: var(--font-size-h2);
     font-weight: bold;
+    text-align: center;
 }
 
 .report-details__speaker {
@@ -72,4 +73,15 @@
     font-size: var(--font-size-text-small);
     padding: 5px 10px;
     border-radius: var(--border-radius);
+}
+
+@media (max-width: 768px) {
+    .report-details {
+        width: 100%;
+    }
+
+    .report-details__info-row {
+        flex-direction: column;
+        gap: 0;
+    }
 }
