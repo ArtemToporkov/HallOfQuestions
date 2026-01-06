@@ -35,9 +35,10 @@ if (args.Contains("--init-ydb-endpoint-only"))
 }
 else
 {
+    var replicaId = $"{Environment.MachineName} (generated id from backend: {Guid.NewGuid()})";
     app.Use(async (context, next) =>
     {
-        context.Response.Headers["X-Replica-ID"] = Environment.MachineName;
+        context.Response.Headers["X-Replica-ID"] = replicaId;
         await next();
     });
 
