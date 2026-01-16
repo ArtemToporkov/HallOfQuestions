@@ -141,8 +141,11 @@ export function ReportsPage(): ReactElement {
     const reportsByStatus = useMemo(() => {
         return reports
             .filter((r) => r.status === chosenStatus)
-            .sort((a, b) =>
-                new Date(a.scheduledStartDateUtc).getTime() - new Date(b.scheduledStartDateUtc).getTime()
+            .sort((first, second) => {
+                    const firstStartDate = first.actualStartDateUtc ?? first.scheduledStartDateUtc;
+                    const secondStartDate = second.actualStartDateUtc ?? second.scheduledStartDateUtc;
+                    return new Date(firstStartDate).getTime() - new Date(secondStartDate).getTime();
+                }
             );
     }, [reports, chosenStatus]);
 
