@@ -1,16 +1,18 @@
-﻿$ErrorActionPreference = "Stop"
+﻿. "$PSScriptRoot/Helpers.ps1"
+
+$ErrorActionPreference = "Stop"
 
 $YANDEX_CLOUD_FOLDER_ID = "b1g4gkkorau936jmpgi4"
 $YANDEX_OBJECT_STORAGE_BUCKET_NAME = "hall-of-questions-frontend"
 
 Write-Host "Building frontend..."
 Push-Location ..\frontend
-npm install
-npm run build
+Invoke-External npm install
+Invoke-External npm run build
 Pop-Location
 
 Write-Host "Removing old frontend version from Object Storage..."
-yc storage s3 rm s3://$YANDEX_OBJECT_STORAGE_BUCKET_NAME --recursive
+Invoke-External yc storage s3 rm s3://$YANDEX_OBJECT_STORAGE_BUCKET_NAME --recursive
 
 Write-Host "Uploading to Object Storage with explicit MIME types..."
 $FULL_DIST_PATH = (Resolve-Path ..\frontend\dist).Path
@@ -24,13 +26,13 @@ Get-ChildItem $FULL_DIST_PATH -Recurse -File | ForEach-Object {
         ".svg"  { "image/svg+xml" }
         default { "application/octet-stream" }
     }
-    yc storage s3 cp $_.FullName "s3://$YANDEX_OBJECT_STORAGE_BUCKET_NAME/$KEY" --content-type $CONTENT_TYPE
+    Invoke-External yc storage s3 cp $_.FullName "s3://$YANDEX_OBJECT_STORAGE_BUCKET_NAME/$KEY" --content-type $CONTENT_TYPE
 }
 
 Write-Host "Configuring website settings..."
-yc storage bucket update `
-    --name $YANDEX_OBJECT_STORAGE_BUCKET_NAME `
+Invoke-External yc storage bucket update `
     --folder-id $YANDEX_CLOUD_FOLDER_ID `
+    --name $YANDEX_OBJECT_STORAGE_BUCKET_NAME `
     --website-settings '{\"index\": \"index.html\", \"error\": \"index.html\"}' `
     --public-read
 

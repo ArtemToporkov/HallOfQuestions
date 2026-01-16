@@ -2,11 +2,13 @@
     [switch]$DropIfExist
 )
 
+. "$PSScriptRoot/Helpers.ps1"
+
 $ErrorActionPreference = "Stop"
 
 $YANDEX_CLOUD_FOLDER_ID = "b1g4gkkorau936jmpgi4"
 $YANDEX_CLOUD_SERVICE_ACCOUNT_ID = "ajeevkq231jhcfteppn5"
-$YANDEX_CONTAINER_REGISTRY_ID = "crp2ot8sddcki8cn0q9h"
+$YANDEX_CONTAINER_REGISTRY_ID = "crp7hsh5d124hgv5f4bg"
 
 $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME = "hall-of-questions-ydb-initializer" 
 
@@ -24,19 +26,19 @@ Write-Host (
     "If not, run 'Publish-Backend.ps1' first"
 ) -ForegroundColor Yellow
 Write-Host "Creating serverless initializer container if doesn't exist..."
-$containerExists = yc serverless container list `
+$containerExists = Invoke-External yc serverless container list `
     --folder-id $YANDEX_CLOUD_FOLDER_ID `
     --format json `
     | ConvertFrom-Json `
     | Where-Object { $_.name -eq $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME }    
 if (-not $containerExists) {
-    yc serverless container create `
+    Invoke-External yc serverless container create `
         --name $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME `
         --folder-id $YANDEX_CLOUD_FOLDER_ID
 }
 
 Write-Host "Deploying serverless initializer container revision..."
-yc serverless container revision deploy `
+Invoke-External yc serverless container revision deploy `
     --container-name $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME `
     --image $BACKEND_IMAGE `
     --cores 1 `
@@ -49,12 +51,13 @@ yc serverless container revision deploy `
     --args $DOTNET_MAP_INIT_YDB_ENDPOINT_ONLY_FLAG
        
 Write-Host "Allowing unauthenticated serverless container invokes..." -ForegroundColor Yellow
-yc serverless container allow-unauthenticated-invoke `
+Invoke-External yc serverless container allow-unauthenticated-invoke `
     --name $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME `
     --folder-id $YANDEX_CLOUD_FOLDER_ID
     
 Write-Host "Triggering YDB initializer container using HTTP request..."
-$uri = yc serverless container get `
+$uri = Invoke-External yc serverless container get `
+    --folder-id $YANDEX_CLOUD_FOLDER_ID `
     --name $INITIALIZER_YANDEX_CLOUD_SERVERLESS_CONTAINER_NAME `
     --format json `
     | ConvertFrom-Json `
