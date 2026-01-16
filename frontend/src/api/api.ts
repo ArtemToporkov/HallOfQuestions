@@ -31,7 +31,7 @@ function showProblemToast(problem: ProblemDetails) {
             .forEach(message => toast.error(message));
         return;
     }
-    toast.error(problem.detail ?? problem.title ?? 'An error occurred');
+    toast.error(problem.detail ?? 'Что-то пошло не так');
 }
 
 const replicaIdHeader = 'x-replica-id';
