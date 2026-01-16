@@ -9,8 +9,8 @@ public class Person
 
     public Person(string name, string surname)
     {
-        ValidateOrThrow(nameof(Name), name);
-        ValidateOrThrow(nameof(Surname), surname);
+        ValidateOrThrow("Имя", name);
+        ValidateOrThrow("Фамилия", surname);
         Name = name;
         Surname = surname;
     }
@@ -18,18 +18,19 @@ public class Person
     private void ValidateOrThrow(string paramName, string value)
     {
         if (value.Length == 0)
-            throw new DomainException($"{paramName} cannot be empty");
+            throw new DomainException($"Поле \"{paramName}\" не может быть пустым");
         if (!char.IsUpper(value[0]) || !char.IsLetter(value[0]))
-            throw new DomainException($"{paramName} must start with a capital letter");
+            throw new DomainException($"Поле \"{paramName}\" должно начинаться с заглавной буквы");
         
         for (var i = 1; i < value.Length; i++)
         {
             var @char = value[i];
             if (!char.IsLetter(@char))
-                throw new DomainException($"{paramName} must contain only letters");
+                throw new DomainException($"Поле \"{paramName}\" должно состоять исключительно из букв");
             if (!char.IsLower(@char))
                 throw new DomainException(
-                    $"{paramName} must contain only lowercase letters except for the first letter");
+                    $"Поле \"{paramName}\" должно состоять исключительно из букв в нижнем регистре" +
+                    $" (за исключением первой буквы)");
         }
     }
 }

@@ -35,7 +35,7 @@ public class Question
     public void Unlike()
     {
         if (LikesCount == 0)
-            throw new DomainException("Likes count cannot be negative");
+            throw new DomainException("Количество лайков не может быть отрицательным");
         LikesCount--;
     }
 }

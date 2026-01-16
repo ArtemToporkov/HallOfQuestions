@@ -82,7 +82,7 @@ else
     {
         var report = await repository.GetByIdAsync(id);
         if (report is null)
-            throw new NotFoundException(nameof(Report), id);
+            throw new NotFoundException("доклад", id);
         report.Start(DateTime.UtcNow);
         await repository.SaveChangesAsync(report);
         return report;
@@ -94,7 +94,7 @@ else
     {
         var report = await repository.GetByIdAsync(id);
         if (report is null)
-            throw new NotFoundException(nameof(Report), id);
+            throw new NotFoundException("доклад", id);
         report.End(DateTime.UtcNow);
         await repository.SaveChangesAsync(report);
         return report;
@@ -116,7 +116,7 @@ else
     {
         var report = await reportRepository.GetByIdAsync(id);
         if (report is null)
-            throw new NotFoundException(nameof(Report), id);
+            throw new NotFoundException("доклад", id);
         var question = new Question(
             Guid.NewGuid().ToString(),
             id,
@@ -133,9 +133,9 @@ else
     {
         var question = await repository.GetByIdAsync(questionId);
         if (question is null)
-            throw new NotFoundException(nameof(Question), questionId);
+            throw new NotFoundException("вопрос", questionId);
         if (question.ReportId != reportId)
-            throw new BadRequestException("Question does not belong to this report");
+            throw new BadRequestException("Вопрос не относится к этому докладу");
         question.Like();
         await repository.SaveChangesAsync(question);
         return question;
@@ -148,9 +148,9 @@ else
     {
         var question = await repository.GetByIdAsync(questionId);
         if (question is null)
-            throw new NotFoundException(nameof(Question), questionId);
+            throw new NotFoundException("вопрос", questionId);
         if (question.ReportId != reportId)
-            throw new BadRequestException("Question does not belong to this report");
+            throw new BadRequestException("Вопрос не относится к этому докладу");
         question.Unlike();
         await repository.SaveChangesAsync(question);
         return question;

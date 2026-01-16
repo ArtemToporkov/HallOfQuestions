@@ -20,7 +20,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         await HandleExceptionAsync(
             (int)HttpStatusCode.InternalServerError,
             "Internal Server Error",
-            "Something went wrong",
+            "Что-то пошло не так",
             httpContext,
             cancellationToken);
         return true;

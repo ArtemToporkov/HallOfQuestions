@@ -27,9 +27,10 @@ public class Report
         ValidateUtcOrThrow(nowUtc);
         
         if (scheduledStartDateUtc < nowUtc)
-            throw new DomainException("Report cannot be planned for a time earlier than the current UTC time");
+            throw new DomainException("Доклад не может быть запланирован ранее, чем текущее время UTC");
         if (scheduledStartDateUtc > scheduledEndDateUtc)
-            throw new DomainException("Scheduled start date cannot be later than scheduled end date");
+            throw new DomainException(
+                "Запланированная дата начала доклада не может раньше его запланированной даты окончания");
 
         return new Report(
             id, title, speaker, scheduledStartDateUtc, scheduledEndDateUtc, null, null, ReportStatus.NotStarted);
@@ -79,8 +80,8 @@ public class Report
         ActualStartDateUtc = startDateUtc;
         Status = Status switch
         {
-            ReportStatus.Started => throw new DomainException("Report has already started"),
-            ReportStatus.Ended => throw new DomainException("Report has already ended"),
+            ReportStatus.Started => throw new DomainException("Доклад уже начался"),
+            ReportStatus.Ended => throw new DomainException("Доклад уже завершён"),
             ReportStatus.NotStarted => ReportStatus.Started,
             _ => throw new ArgumentException("Unexpected report status")
         };
@@ -93,12 +94,12 @@ public class Report
         var newStatus = Status switch
         {
             ReportStatus.Started => ReportStatus.Ended,
-            ReportStatus.Ended => throw new DomainException("Report has already ended"),
-            ReportStatus.NotStarted => throw new DomainException("Report has not started"),
+            ReportStatus.Ended => throw new DomainException("Доклад уже завершён"),
+            ReportStatus.NotStarted => throw new DomainException("Доклад ещё не начался"),
             _ => throw new InvalidOperationException()
         };
         if (endDate < ActualStartDateUtc!.Value)
-            throw new DomainException("Report cannot end earlier than it started");
+            throw new DomainException("Доклад не может закончиться раньше, чем начался");
 
         Status = newStatus;
         ActualEndDateUtc = endDate;
@@ -107,6 +108,6 @@ public class Report
     private static void ValidateUtcOrThrow(DateTime dateUtc)
     {
         if (dateUtc.Kind != DateTimeKind.Utc)
-            throw new DomainException("Date must be in UTC");
+            throw new DomainException("Дата должна быть в UTC формате");
     }
 }
