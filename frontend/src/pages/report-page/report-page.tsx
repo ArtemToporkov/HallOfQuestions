@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useParams } from 'react-router-dom';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { type FormEvent, type ReactElement, useState } from 'react';
+import { useMemo, useState, type FormEvent, type ReactElement } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportInfo } from '../../components/report-info/report-info.tsx';
@@ -94,6 +94,10 @@ export function ReportPage(): ReactElement {
     });
 
     const report = reports.find((r) => r.id === id);
+    const questions = useMemo(() => {
+        return [...reportQuestions]
+            .sort((a, b) => b.likesCount - a.likesCount);
+    }, [reportQuestions]);
 
     const startMutation = useMutation({
         mutationFn: () => startReport(id as string),
@@ -170,7 +174,7 @@ export function ReportPage(): ReactElement {
                     )}
 
                     {!isQuestionsLoading && reportQuestions.length > 0 && (
-                        reportQuestions.map((q) => (
+                        questions.map((q) => (
                             <QuestionCard key={q.id} question={q} />
                         ))
                     )}

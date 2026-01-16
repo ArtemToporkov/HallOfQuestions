@@ -1,14 +1,14 @@
-﻿import { type ReactElement, useState, type FormEvent } from 'react';
+﻿import classNames from 'classnames';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import classNames from 'classnames';
+import { useState, useMemo, type ReactElement, type FormEvent } from 'react';
 
 import { Layout } from '../../components/layout/layout.tsx';
 import { ReportCard } from '../../components/report-card/report-card.tsx';
 import { ReportStatus } from '../../enums/report-status.ts';
-import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
 import { Spinner } from '../../components/spinner/spinner.tsx';
 import { Modal } from '../../components/modal/modal.tsx';
 import { Input } from '../../components/input/input.tsx';
+import { addReport, getReports, type AddReportRequest } from '../../api/api.ts';
 import type { ReportData } from '../../types/report-data.ts';
 
 import './reports-page.css';
@@ -138,7 +138,13 @@ export function ReportsPage(): ReactElement {
         createReportMutation.mutate(request);
     }
 
-    const reportsByStatus = reports.filter((r) => r.status === chosenStatus);
+    const reportsByStatus = useMemo(() => {
+        return reports
+            .filter((r) => r.status === chosenStatus)
+            .sort((a, b) =>
+                new Date(a.scheduledStartDateUtc).getTime() - new Date(b.scheduledStartDateUtc).getTime()
+            );
+    }, [reports, chosenStatus]);
 
     return (
         <Layout>
