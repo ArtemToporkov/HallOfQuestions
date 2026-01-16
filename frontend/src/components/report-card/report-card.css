@@ -96,10 +96,6 @@
     font-weight: bold;
 }
 
-.report-card__button-count {
-    font-weight: normal;
-}
-
 @media (max-width: 768px) {
     .report-card {
         flex-direction: column;

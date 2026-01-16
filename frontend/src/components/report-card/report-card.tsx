@@ -12,7 +12,6 @@ import './report-card.css';
 
 type ReportCardProps = {
     report: ReportData;
-    questionsCount?: number;
 }
 
 function TimingInfo({ scheduledStartDateUtc, scheduledEndDateUtc, reportStatus, actualStartDateUtc, actualEndDateUtc }: {
@@ -58,7 +57,7 @@ function TimingInfo({ scheduledStartDateUtc, scheduledEndDateUtc, reportStatus, 
     );
 }
 
-export function ReportCard({ report, questionsCount = 0 }: ReportCardProps): ReactElement {
+export function ReportCard({ report }: ReportCardProps): ReactElement {
     const isStarted = report.status === ReportStatus.Started;
     const isEnded = report.status === ReportStatus.Ended;
     const reportLink = generatePath(AppRoute.Report, { id: report.id });
@@ -90,8 +89,7 @@ export function ReportCard({ report, questionsCount = 0 }: ReportCardProps): Rea
                 { "report-card__questions--hidden": !isStarted }
             )}>
                 <Link to={reportLink} className="report-card__button">
-                    <span className="report-card__button-title">Вопросы</span>
-                    <span className="report-card__button-count">{questionsCount}</span>
+                    <span className="report-card__button-title">К вопросам</span>
                 </Link>
             </div>
             <div className={classNames(
