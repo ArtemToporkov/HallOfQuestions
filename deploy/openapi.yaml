@@ -80,7 +80,18 @@ paths:
       responses:
         default:
           description: See response codes in Yandex Object Storage API documentation
-        
+
+  /favicon.ico:
+    get:
+      x-yc-apigateway-integration:
+        type: object_storage
+        bucket: ${FRONTEND_YANDEX_OBJECT_STORAGE_BUCKET_NAME}
+        object: 'favicon.ico'
+        service_account_id: ${YANDEX_CLOUD_SERVICE_ACCOUNT_ID}
+      responses:
+        default:
+          description: Favicon
+      
   /{any+}:
     get:
       parameters:
